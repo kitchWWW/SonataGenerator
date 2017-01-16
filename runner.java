@@ -9,22 +9,34 @@ import java.util.Scanner;
 
 public class runner {
 
-	ArrayList<String> clefs;
-
 	public static void main(String[] args) {
 		//Following should be moved to be taken as arguments
-		int totalParts = 4;
-		ArrayList<ArrayList<Integer>> possibleNotes = new ArrayList<>();
-		ArrayList<String> clefs = new ArrayList<>();
-		ArrayList<String> names = new ArrayList<>(Arrays.asList("Oboe","Marimba","Guitar","Marimba"));
-
-//		ArrayList<String> names = new ArrayList<>(Arrays.asList("Violin 1","Violin 2","Viola","Cello"));
+		String  timeStamp = args[0];
+		//System.out.println(args[0]);
+		//System.out.println(args[1]);
+		//System.out.println(args[2]);
+		//System.out.println(args[3]);
+		//System.out.println(args[4]);
+		//System.out.println(args[5]);
 		
+		//Gson gson = new Gson();
+		//Insturment test = gson.fromJson(args[1], Insturment.class);
+		ArrayList<Insturment> insturments = new ArrayList<>();
+		insturments.add(new Insturment("Guitar","Violin","\"treble\"",false,false,new Integer[]{71,72,74,76}));
+		insturments.add(new Insturment("Guitar","Violin","\"treble\"",false,false,new Integer[]{71,72,74,76}));
+		insturments.add(new Insturment("Guitar","Violin","\"treble\"",false,false,new Integer[]{71,72,74,76}));
+		insturments.add(new Insturment("Guitar","Violin","\"treble\"",false,false,new Integer[]{71,72,74,76}));
+		insturments.add(new Insturment("Guitar","Violin","\"treble\"",false,false,new Integer[]{71,72,74,76}));
+		insturments.add(new Insturment("Guitar","Violin","\"treble\"",false,false,new Integer[]{71,72,74,76}));
+		insturments.add(new Insturment("Guitar","Violin","\"treble\"",false,false,new Integer[]{71,72,74,76}));
+		insturments.add(new Insturment("Guitar","Violin","\"treble\"",false,false,new Integer[]{71,72,74,76}));
+		insturments.add(new Insturment("Guitar","Violin","\"treble\"",false,false,new Integer[]{71,72,74,76}));
 
-		 possibleNotes.add(new ArrayList<>(Arrays.asList(71,72,74,76)));
-		 possibleNotes.add(new ArrayList<>(Arrays.asList(65,67,71,72)));
-		 possibleNotes.add(new ArrayList<>(Arrays.asList(62,64,67,69)));
-		 possibleNotes.add(new ArrayList<>(Arrays.asList(59,60,64,65)));
+
+//		 possibleNotes.add(new ArrayList<>(Arrays.asList(71,72,74,76)));
+//		 possibleNotes.add(new ArrayList<>(Arrays.asList(65,67,71,72)));
+//		 possibleNotes.add(new ArrayList<>(Arrays.asList(62,64,67,69)));
+//		 possibleNotes.add(new ArrayList<>(Arrays.asList(59,60,64,65)));
 
 		// possibleNotes.add(new ArrayList<>(Arrays.asList(66,69,70,71)));
 		// possibleNotes.add(new ArrayList<>(Arrays.asList(61,63,65,67)));
@@ -36,64 +48,75 @@ public class runner {
 //		possibleNotes.add(new ArrayList<>(Arrays.asList(53,55,57,59)));
 //		possibleNotes.add(new ArrayList<>(Arrays.asList(45,48,52,53)));
 
-
-
-		String  timeStamp = args[0];
-
-
-
-
-		ArrayList<ArrayList<TempNote>> oneTemp = MovementOne.generate(totalParts);
-		//ArrayList<String> oneParts = tempNotesToParts(oneTemp,possibleNotes);		
-		//buildParts(timeStamp,"I", oneParts,names);
-
-		ArrayList<ArrayList<TempNote>> twoTemp = MovementTwo.generate(totalParts,possibleNotes,TempNote.strip(oneTemp));
-		//ArrayList<String> twoParts = tempNotesToParts(twoTemp,possibleNotes);		
-		//buildParts(timeStamp,"II", twoParts,names);
+		ArrayList<ArrayList<TempNote>> oneTemp = MovementOne.generate(insturments);
 		
+		ArrayList<ArrayList<TempNote>> twoTemp = MovementTwo.generate(insturments,TempNote.strip(oneTemp));
 
-		for(int i = 0; i < totalParts; i ++){
+		for(int i = 0; i < insturments.size(); i ++){
 			oneTemp.get(i).add(new TempNote("\\bar\"||\" \n \\break \n "));
 			oneTemp.get(i).addAll(twoTemp.get(i));
 		}
-		ArrayList<String> finalParts = tempNotesToParts(oneTemp,possibleNotes);		
-		//System.out.println(finalParts);
-		//System.out.println(oneTemp);
-		buildParts(timeStamp,"III", finalParts,names);
+		ArrayList<String> finalParts = tempNotesToParts(oneTemp,insturments);
+
+		buildParts(timeStamp,"EpochMusic", finalParts,insturments);
 
 
 	}
 	private static ArrayList<String> tempNotesToParts(ArrayList<ArrayList<TempNote>> tempNotes,
-		ArrayList<ArrayList<Integer>> possibleNotes){
+		ArrayList<Insturment> insturments){
 		ArrayList<String> ret = new ArrayList<>();
 		for(int i = 0; i < tempNotes.size(); i ++){
 			//swap out the temp notes for real ones, then use toString to make it a strin
-			ret.add(Note.toString(TempNote.swap(tempNotes.get(i),possibleNotes.get(i))));
+			ret.add(Note.toString(TempNote.swap(tempNotes.get(i),insturments.get(i))));
 		}
 		return ret;
 	}	
 
 	private static void buildParts(String timeStamp, String title,
-		ArrayList<String> parts, ArrayList<String> names){
+		ArrayList<String> parts, ArrayList<Insturment> insturments){
 		try {
+			ArrayList<String> longParts = new ArrayList<>();
+			for(int index = 0; index < insturments.size(); index++){
+				String newPart = "";
+				File partFile = new File("templates/part.ly");
+		        Scanner ps = new Scanner(partFile);
+				while (ps.hasNextLine()) {
+		            String i = ps.nextLine();
+
+		            if(i.startsWith("%part")){
+		            	newPart+= parts.get(index) +"\n";
+
+		            }else if(i.startsWith("%name")){
+		            	newPart+= insturments.get(index).name +"\n";
+
+		            }else if(i.startsWith("%clef")){
+		            	newPart+= insturments.get(index).staff +"\n";
+		            
+		            }else if(i.contains("%midi")){
+		            	i = i.substring(0,i.indexOf("%midi"));
+		            	newPart+= i+""+insturments.get(index).midi +"\"\n";
+
+		            }else{
+		            	newPart+=i + "\n";
+		            }
+		        }
+		        longParts.add(newPart);
+			}
+
+
 
 			String res = "";
-
-			File file = new File("templates/Temp1.ly");
-
+			File file = new File("templates/score.ly");
 	        Scanner sc = new Scanner(file);
 
 	        while (sc.hasNextLine()) {
 	            String i = sc.nextLine();
-	            //System.out.println(i);
 	            if(i.startsWith("%part")){
 	            	i = i.substring(5);
 	            	int index = Integer.parseInt(i);
-	            	res+= parts.get(index) +"\n";
-	            }else if(i.startsWith("%name")){
-	            	i = i.substring(5);
-	            	int index = Integer.parseInt(i);
-	            	res+= names.get(index) +"\n";
+	            	if(index < longParts.size()){
+	            		res+= longParts.get(index) +"\n";
+	            	}
 	            }else if(i.startsWith("%timeStamp")){
 	            	res+= timeStamp +"\n";
 	            }
@@ -102,9 +125,35 @@ public class runner {
 	            }
 	        }
         	sc.close();
-			PrintWriter writer = new PrintWriter("out/"+timeStamp+"/"+title+".ly", "UTF-8");
+			PrintWriter writer = new PrintWriter("out/"+timeStamp+"/"+title+"Score.ly", "UTF-8");
 			writer.println(res);
 			writer.close();
+
+
+			res = "";
+			file = new File("templates/parts.ly");
+	        sc = new Scanner(file);
+
+	        while (sc.hasNextLine()) {
+	            String i = sc.nextLine();
+	            if(i.startsWith("%part")){
+	            	i = i.substring(5);
+	            	int index = Integer.parseInt(i);
+	            	if(index < longParts.size()){
+	            		res+= longParts.get(index) +"\n";
+	            	}
+	            }else if(i.startsWith("%timeStamp")){
+	            	res+= timeStamp +"\n";
+	            }
+	            else{
+	            	res+=i + "\n";
+	            }
+	        }
+        	sc.close();
+			writer = new PrintWriter("out/"+timeStamp+"/"+title+"Parts.ly", "UTF-8");
+			writer.println(res);
+			writer.close();
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("I guess we give up now...");

@@ -7,10 +7,11 @@ import java.util.concurrent.ThreadLocalRandom;
 public class MovementTwo {
 
 	public static ArrayList<ArrayList<TempNote>> generate(
-		int totalParts,
-		ArrayList<ArrayList<Integer>> possibleNotes,
+		ArrayList<Insturment> insturments,
 		ArrayList<ArrayList<TempNote>> mvmtOne
 		){
+
+		int totalParts = insturments.size();
 
 		ArrayList<ArrayList<TempNote>> mvmtTwo = new ArrayList<>();
 		
@@ -18,26 +19,27 @@ public class MovementTwo {
 		ArrayList<Integer> chord = new ArrayList<>();
 
 
-
 		boolean goodToGo = false;
 		while(!goodToGo){
 
 			chords = new ArrayList<>();
-			for(int ind = 0; ind < 5; ind++){
+			for(int ind = 0; ind < 6; ind++){
 				chord = new ArrayList<>();
 				for(int j =0; j <mvmtOne.size(); j ++){
-					chord.add(
-						ThreadLocalRandom.current().nextInt(0, 4));
+					chord.add(ThreadLocalRandom.current().nextInt(0, 4));
 				}
 				chords.add(chord);
 			}
-			chords.add(new ArrayList<>(Arrays.asList(2,2,2,2)));
+			ArrayList<Integer> finalChord = new ArrayList<>();
+			for(int smallindex = 0; smallindex<mvmtOne.size(); smallindex++){
+				finalChord.add(2);
+			}
+			chords.add(finalChord);
 
 			goodToGo = true;
 
-
 			for(int i = 0; i <mvmtOne.size(); i++){
-				boolean[] found = {false, false, false,false};
+				boolean[] found = {false, false, false, false};
 				for(int j = 0; j <chords.size(); j ++){
 					found[chords.get(j).get(i)] = true;
 				}
@@ -59,20 +61,22 @@ public class MovementTwo {
 				for(int i = 0; i < chords.size(); i++){
 					if(j<totalParts-bigI){
 						mvmtTwo.get(j).add(new TempNote(chords.get(i).get(j),8));
-						mvmtTwo.get(j).add(new TempNote("\\<"));
-
+						if(insturments.get(j).crescendo){
+							mvmtTwo.get(j).add(new TempNote("\\<"));
+						}
 						mvmtTwo.get(j).add(new TempNote("~"));
 
 						mvmtTwo.get(j).add(new TempNote(chords.get(i).get(j),8));
-						mvmtTwo.get(j).add(new TempNote("\\>"));
-
+						if(insturments.get(j).crescendo){
+							mvmtTwo.get(j).add(new TempNote("\\>"));
+						}
 					}else{
 						int index = getGoodIndex(mvmtOne,j,chords.get(i).get(j));
 						ArrayList<TempNote> exerpt = TempNote.getExerpt(mvmtOne.get(j),index,8);
 						exerpt.add(new TempNote(mvmtOne.get(j).get(index).tempValue,8));
 						exerpt.add(1,new TempNote("("));
 						exerpt.add(1,new TempNote("\\<"));
-						exerpt.add(new TempNote("\\>"));
+						exerpt.add(new TempNote("\\>"));						
 						exerpt.add(new TempNote(")"));
 						if(j==totalParts-bigI && i==0){
 							exerpt.add(1, new TempNote("^\"solo\" \\mf"));
@@ -87,7 +91,9 @@ public class MovementTwo {
 			}
 		}
 
-		int[] startsOfMovement = new int[4];
+
+		int episodes = totalParts+1;
+		int[] startsOfMovement = new int[mvmtOne.size()];
 
 		for(int vi = 0; vi < totalParts; vi ++){
 			mvmtTwo.get(vi).add(1, new TempNote("\n \\p"));
@@ -100,11 +106,12 @@ public class MovementTwo {
 		}
 		//Chord 0,1,0,2,0,3,4,5
 		//This determines who is the soloist for each of the different chord sections
+
 		goodToGo = false;
 		ArrayList<Integer> soloist = new ArrayList<>();
 		while(!goodToGo){
 			soloist = new ArrayList<>();
-			for(int i = 0; i < chords.size(); i++){
+			for(int i = 0; i < episodes; i++){
 				soloist.add(i%totalParts);
 			}
 			Collections.shuffle(soloist);
@@ -177,88 +184,110 @@ public class MovementTwo {
 
 		}
 
-		//short re-visit to zero theme
-		for(int vi = 0; vi < totalParts; vi ++){
-			mvmtTwo.get(vi).addAll(TempNote.getExerpt(zeroTheme.get(vi),0,48));
-		}
 
-		//now for the 2nd theme
-		for(int vi= 0; vi< totalParts; vi++){//voice index, or insturment
-			int index = getGoodIndex(mvmtOne,vi,chords.get(2).get(vi));
-			int solo = soloist.get(2);
-			if(vi == solo){
-				mvmtTwo.get(vi).addAll(TempNote.getExerpt(mvmtOne.get(vi),index,8));
-				mvmtTwo.get(vi).addAll(TempNote.getExerpt(mvmtOne.get(vi),index,72));
-				mvmtTwo.get(vi).addAll(TempNote.getExerpt(mvmtOne.get(vi),index,8));
-				mvmtTwo.get(vi).addAll(TempNote.getExerpt(mvmtOne.get(vi),index,8));
-			}else{
-				for(int i = 0; i < 3; i ++){
+
+		if(episodes>3){
+			//short re-visit to zero theme
+			for(int vi = 0; vi < totalParts; vi ++){
+				mvmtTwo.get(vi).addAll(TempNote.getExerpt(zeroTheme.get(vi),0,48));
+			}
+			//now for the 2nd theme
+			for(int vi= 0; vi< totalParts; vi++){//voice index, or insturment
+				int index = getGoodIndex(mvmtOne,vi,chords.get(2).get(vi));
+				int solo = soloist.get(2);
+				if(vi == solo){
 					mvmtTwo.get(vi).addAll(TempNote.getExerpt(mvmtOne.get(vi),index,8));
-					mvmtTwo.get(vi).add(new TempNote(chords.get(1).get(vi),4));
-					mvmtTwo.get(vi).add(new TempNote(-1,4));
-					mvmtTwo.get(vi).add(new TempNote(chords.get(1).get(vi),4));
-					mvmtTwo.get(vi).add(new TempNote(-1,4));
-					mvmtTwo.get(vi).add(new TempNote(chords.get(1).get(vi),4));
-					mvmtTwo.get(vi).add(new TempNote(-1,4));					
+					mvmtTwo.get(vi).addAll(TempNote.getExerpt(mvmtOne.get(vi),index,72));
+					mvmtTwo.get(vi).addAll(TempNote.getExerpt(mvmtOne.get(vi),index,8));
+					mvmtTwo.get(vi).addAll(TempNote.getExerpt(mvmtOne.get(vi),index,8));
+				}else{
+					for(int i = 0; i < 3; i ++){
+						mvmtTwo.get(vi).addAll(TempNote.getExerpt(mvmtOne.get(vi),index,8));
+						mvmtTwo.get(vi).add(new TempNote(chords.get(1).get(vi),4));
+						mvmtTwo.get(vi).add(new TempNote(-1,4));
+						mvmtTwo.get(vi).add(new TempNote(chords.get(1).get(vi),4));
+						mvmtTwo.get(vi).add(new TempNote(-1,4));
+						mvmtTwo.get(vi).add(new TempNote(chords.get(1).get(vi),4));
+						mvmtTwo.get(vi).add(new TempNote(-1,4));					
+					}
 				}
 			}
 		}
 
-		//short re-visit to zero theme
-		for(int vi = 0; vi < totalParts; vi ++){
-			mvmtTwo.get(vi).addAll(TempNote.getExerpt(zeroTheme.get(vi),0,24));
-			mvmtTwo.get(vi).addAll(TempNote.getExerpt(zeroTheme.get(soloist.get(0)),0,8));
-		}
-
-
-
-		//now for the 3rd theme
-		for(int vi= 0; vi< totalParts; vi++){//voice index, or insturment
-			int index = getGoodIndex(mvmtOne,vi,chords.get(3).get(vi));
-			int solo = soloist.get(3);
-			if(vi == solo){
-				mvmtTwo.get(vi).addAll(TempNote.getExerpt(mvmtOne.get(vi),index,16));
-				mvmtTwo.get(vi).addAll(TempNote.getExerpt(mvmtOne.get(vi),index,16));
-			}else{
-				mvmtTwo.get(vi).addAll(TempNote.getExerpt(mvmtOne.get(vi),index,8));
-				mvmtTwo.get(vi).add(new TempNote(chords.get(3).get(vi),4));
-				mvmtTwo.get(vi).add(new TempNote(-1,4));
-				mvmtTwo.get(vi).addAll(TempNote.getExerpt(mvmtOne.get(vi),index,8));
-				mvmtTwo.get(vi).add(new TempNote(chords.get(3).get(vi),4));
-				mvmtTwo.get(vi).add(new TempNote(-1,4));
+		if(episodes>4){
+			//short re-visit to zero theme
+			for(int vi = 0; vi < totalParts; vi ++){
+				mvmtTwo.get(vi).addAll(TempNote.getExerpt(zeroTheme.get(vi),0,24));
+				mvmtTwo.get(vi).addAll(TempNote.getExerpt(zeroTheme.get(soloist.get(0)),0,8));
+			}
+			//now for the 3rd theme
+			for(int vi= 0; vi< totalParts; vi++){//voice index, or insturment
+				int index = getGoodIndex(mvmtOne,vi,chords.get(3).get(vi));
+				int solo = soloist.get(3);
+				if(vi == solo){
+					mvmtTwo.get(vi).addAll(TempNote.getExerpt(mvmtOne.get(vi),index,16));
+					mvmtTwo.get(vi).addAll(TempNote.getExerpt(mvmtOne.get(vi),index,16));
+				}else{
+					mvmtTwo.get(vi).addAll(TempNote.getExerpt(mvmtOne.get(vi),index,8));
+					mvmtTwo.get(vi).add(new TempNote(chords.get(3).get(vi),4));
+					mvmtTwo.get(vi).add(new TempNote(-1,4));
+					mvmtTwo.get(vi).addAll(TempNote.getExerpt(mvmtOne.get(vi),index,8));
+					mvmtTwo.get(vi).add(new TempNote(chords.get(3).get(vi),4));
+					mvmtTwo.get(vi).add(new TempNote(-1,4));
+				}
 			}
 		}
 
-		//now for the 4rd theme
-		for(int vi= 0; vi< totalParts; vi++){//voice index, or insturment
-			int index = getGoodIndex(mvmtOne,vi,chords.get(4).get(vi));
-			int solo = soloist.get(4);
-			if(vi == solo){
-				mvmtTwo.get(vi).addAll(TempNote.getExerpt(mvmtOne.get(vi),index,16));
-				mvmtTwo.get(vi).addAll(TempNote.getExerpt(mvmtOne.get(vi),index,16));
-			}else{
-				mvmtTwo.get(vi).addAll(TempNote.getExerpt(mvmtOne.get(vi),index,8));
-				mvmtTwo.get(vi).add(new TempNote(chords.get(4).get(vi),4));
-				mvmtTwo.get(vi).add(new TempNote(-1,4));
-				mvmtTwo.get(vi).addAll(TempNote.getExerpt(mvmtOne.get(vi),index,8));
-				mvmtTwo.get(vi).add(new TempNote(chords.get(4).get(vi),4));
-				mvmtTwo.get(vi).add(new TempNote(-1,4));
+		if(episodes > 5){
+			//now for the 4rd theme
+			for(int vi= 0; vi< totalParts; vi++){//voice index, or insturment
+				int index = getGoodIndex(mvmtOne,vi,chords.get(4).get(vi));
+				int solo = soloist.get(4);
+				if(vi == solo){
+					mvmtTwo.get(vi).addAll(TempNote.getExerpt(mvmtOne.get(vi),index,16));
+					mvmtTwo.get(vi).addAll(TempNote.getExerpt(mvmtOne.get(vi),index,16));
+				}else{
+					mvmtTwo.get(vi).addAll(TempNote.getExerpt(mvmtOne.get(vi),index,8));
+					mvmtTwo.get(vi).add(new TempNote(chords.get(4).get(vi),4));
+					mvmtTwo.get(vi).add(new TempNote(-1,4));
+					mvmtTwo.get(vi).addAll(TempNote.getExerpt(mvmtOne.get(vi),index,8));
+					mvmtTwo.get(vi).add(new TempNote(chords.get(4).get(vi),4));
+					mvmtTwo.get(vi).add(new TempNote(-1,4));
+				}
 			}
 		}
+		if(episodes > 6){
+			for(int vi= 0; vi< totalParts; vi++){
+				int index = getGoodIndex(mvmtOne,vi,chords.get(5).get(vi));
+				int solo = soloist.get(5);
+				if(vi == solo){
+					mvmtTwo.get(vi).addAll(TempNote.getExerpt(mvmtOne.get(vi),index,64));
+				}else{
+					mvmtTwo.get(vi).add(new TempNote(chords.get(5).get(vi),4));
+					mvmtTwo.get(vi).add(new TempNote(-1,4));
+					mvmtTwo.get(vi).add(new TempNote(-1,8));
+					mvmtTwo.get(vi).add(new TempNote(-1,16));
+					mvmtTwo.get(vi).add(new TempNote(-1,16));
+					mvmtTwo.get(vi).addAll(TempNote.getExerpt(mvmtOne.get(vi),index,16));
 
-		for(int vi= 0; vi< totalParts; vi++){//voice index, or insturment
-			int index = getGoodIndex(mvmtOne,vi,chords.get(5).get(vi));
-			int solo = soloist.get(5);
-			if(vi == solo){
-				mvmtTwo.get(vi).addAll(TempNote.getExerpt(mvmtOne.get(vi),index,64));
-			}else{
-				mvmtTwo.get(vi).add(new TempNote(chords.get(5).get(vi),4));
-				mvmtTwo.get(vi).add(new TempNote(-1,4));
-				mvmtTwo.get(vi).add(new TempNote(-1,8));
-				mvmtTwo.get(vi).add(new TempNote(-1,16));
-				mvmtTwo.get(vi).add(new TempNote(-1,16));
-				mvmtTwo.get(vi).addAll(TempNote.getExerpt(mvmtOne.get(vi),index,16));
-
+				}
+			}
+		}
+		if(episodes > 7){
+			int curEpisode = 6;
+			while(curEpisode < soloist.size()){
+				for(int vi= 0; vi< totalParts; vi++){//voice index, or insturment
+					int index = getGoodIndex(mvmtOne,vi,chords.get(4).get(vi));
+					int solo = soloist.get(curEpisode);
+					if(vi == solo){
+						mvmtTwo.get(vi).addAll(TempNote.getExerpt(mvmtOne.get(vi),index,16));
+					}else{
+						mvmtTwo.get(vi).addAll(TempNote.getExerpt(mvmtOne.get(vi),index,8));
+						mvmtTwo.get(vi).add(new TempNote(chords.get(4).get(vi),4));
+						mvmtTwo.get(vi).add(new TempNote(-1,4));
+					}
+				}
+				curEpisode++;
 			}
 		}
 

@@ -14,7 +14,7 @@ public class TempNote {
 		return sum;
 	}
 
-	public static ArrayList<Note> swap(ArrayList<TempNote> notes, ArrayList<Integer> possibleNotes){
+	public static ArrayList<Note> swap(ArrayList<TempNote> notes, Insturment insturment){
 		ArrayList<Note> ret = new ArrayList<>();
 		for(TempNote tn: notes){
 			Note nn;
@@ -23,7 +23,7 @@ public class TempNote {
 			}else if (tn.tempValue == -2){
 				nn = new Note(tn.message);
 			}else{
-				nn = new Note(possibleNotes.get(tn.tempValue), tn.dur(), tn.message);
+				nn = new Note(insturment.notes[(tn.tempValue)], tn.dur(), tn.message);
 			}
 			ret.add(nn);
 		}
@@ -49,7 +49,15 @@ public class TempNote {
 			dur += notes.get(i).dur();
 			i++;
 		}
-		return notes.get(i);
+		if(dur == index){
+			return notes.get(i);	
+		}
+		if(i >0){
+			return notes.get(i-1);	
+		}
+		System.out.println("Help!");
+		System.out.println(notes +" "+index+" "+i+" "+dur);
+		return notes.get(0);
 	}
 
 	//returns the actual index, not a duration from start
@@ -88,6 +96,7 @@ public class TempNote {
 		if(dur>excerptDuration){
 			ret.get(ret.size()-1).duration = dur - excerptDuration;
 		}
+
 		return ret;
 	}
 

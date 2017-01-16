@@ -1,5 +1,5 @@
 #!/bin/bash
-timestamp="$(date +"%s")"
+timestamp=$(date +%s)
 echo "starting run script, with timestamp:"
 echo $timestamp
 mkdir out/$timestamp
@@ -7,15 +7,14 @@ find . -name "*.class" -type f -delete
 javac runner.java
 echo "Completed compile portion"
 
-java runner $timestamp
+java runner $timestamp {name:"guitar",staff:"treble_8",crescendo:true,tremolo:false,notes:[71,72,74,76],midi:"violin"}
 echo "Completed run"
 cd out/$timestamp
 
-#/Applications/Lilypond.app/Contents/Resources/bin/lilypond I.ly
-/Applications/Lilypond.app/Contents/Resources/bin/lilypond III.ly
-open III.pdf
-#open I.pdf
-open III.midi
+/Applications/Lilypond.app/Contents/Resources/bin/lilypond EpochMusicScore.ly
+#lilypond EpochMusic.ly
+open EpochMusicScore.pdf
+open EpochMusicScore.midi
 cd ..
 cd ..
 find . -name "*.class" -type f -delete
