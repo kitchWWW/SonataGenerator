@@ -68,6 +68,12 @@ public class MovementOne {
 		}
 
 		for(int i = 0; i < totalParts; i ++){
+			while(TempNote.dur(mvmtOne.get(i))<totalLength+32){
+				mvmtOne.get(i).addAll(genMusic(0, 32));
+				//System.out.println("culling");
+			}
+		}		
+		for(int i = 0; i < totalParts; i ++){
 			while(TempNote.dur(mvmtOne.get(i))>totalLength+32){
 				mvmtOne.get(i).remove(mvmtOne.get(i).size()-1);
 				//System.out.println("culling");

@@ -10,67 +10,21 @@ import java.util.Scanner;
 public class runner {
 
 	public static void main(String[] args) {
-		//Following should be moved to be taken as arguments
 		String  timeStamp = args[0];
-		//System.out.println(args[0]);
-		//System.out.println(args[1]);
-		//System.out.println(args[2]);
-		//System.out.println(args[3]);
-		//System.out.println(args[4]);
-		//System.out.println(args[5]);
-		
-		//Gson gson = new Gson();
-		//Insturment test = gson.fromJson(args[1], Insturment.class);
+		ArrayList<Integer> intervals = new ArrayList<>();
+		intervals.add(0);
+		intervals.add(1);
+		intervals.add(4);
+
 		ArrayList<Insturment> insturments = new ArrayList<>();
-		insturments.add(new Insturment("Guitar","Violin","\"treble\"",false,false,new Integer[]{71,72,74,76}));
-		insturments.add(new Insturment("Guitar","Violin","\"treble\"",false,false,new Integer[]{71,72,74,76}));
-		insturments.add(new Insturment("Guitar","Violin","\"treble\"",false,false,new Integer[]{71,72,74,76}));
-		insturments.add(new Insturment("Guitar","Violin","\"treble\"",false,false,new Integer[]{71,72,74,76}));
-		insturments.add(new Insturment("Guitar","Violin","\"treble\"",false,false,new Integer[]{71,72,74,76}));
-		insturments.add(new Insturment("Guitar","Violin","\"treble\"",false,false,new Integer[]{71,72,74,76}));
-		insturments.add(new Insturment("Guitar","Violin","\"treble\"",false,false,new Integer[]{71,72,74,76}));
-		insturments.add(new Insturment("Guitar","Violin","\"treble\"",false,false,new Integer[]{71,72,74,76}));
-		insturments.add(new Insturment("Guitar","Violin","\"treble\"",false,false,new Integer[]{71,72,74,76}));
+		insturments.add(new Insturment("Guitar","Acoustic Guitar (nylon)","\"treble_8\"",false,false));
 
+		ArrayList<Note> oneTemp = MovementOne.generate(intervals);
 
-//		 possibleNotes.add(new ArrayList<>(Arrays.asList(71,72,74,76)));
-//		 possibleNotes.add(new ArrayList<>(Arrays.asList(65,67,71,72)));
-//		 possibleNotes.add(new ArrayList<>(Arrays.asList(62,64,67,69)));
-//		 possibleNotes.add(new ArrayList<>(Arrays.asList(59,60,64,65)));
-
-		// possibleNotes.add(new ArrayList<>(Arrays.asList(66,69,70,71)));
-		// possibleNotes.add(new ArrayList<>(Arrays.asList(61,63,65,67)));
-		// possibleNotes.add(new ArrayList<>(Arrays.asList(50,52,56,58)));
-		// possibleNotes.add(new ArrayList<>(Arrays.asList(44,46,49,51)));
-
-//		possibleNotes.add(new ArrayList<>(Arrays.asList(69,72,74,76)));
-//		possibleNotes.add(new ArrayList<>(Arrays.asList(64,65,67,69)));
-//		possibleNotes.add(new ArrayList<>(Arrays.asList(53,55,57,59)));
-//		possibleNotes.add(new ArrayList<>(Arrays.asList(45,48,52,53)));
-
-		ArrayList<ArrayList<TempNote>> oneTemp = MovementOne.generate(insturments);
-		
-		ArrayList<ArrayList<TempNote>> twoTemp = MovementTwo.generate(insturments,TempNote.strip(oneTemp));
-
-		for(int i = 0; i < insturments.size(); i ++){
-			oneTemp.get(i).add(new TempNote("\\bar\"||\" \n \\break \n "));
-			oneTemp.get(i).addAll(twoTemp.get(i));
-		}
-		ArrayList<String> finalParts = tempNotesToParts(oneTemp,insturments);
-
-		buildParts(timeStamp,"EpochMusic", finalParts,insturments);
+		buildParts(timeStamp,"IntervalMusic", oneTemp,insturments);
 
 
 	}
-	private static ArrayList<String> tempNotesToParts(ArrayList<ArrayList<TempNote>> tempNotes,
-		ArrayList<Insturment> insturments){
-		ArrayList<String> ret = new ArrayList<>();
-		for(int i = 0; i < tempNotes.size(); i ++){
-			//swap out the temp notes for real ones, then use toString to make it a strin
-			ret.add(Note.toString(TempNote.swap(tempNotes.get(i),insturments.get(i))));
-		}
-		return ret;
-	}	
 
 	private static void buildParts(String timeStamp, String title,
 		ArrayList<String> parts, ArrayList<Insturment> insturments){

@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class Note {
 
-	static String[] noteNames = {"c","cis","d","dis","e","f","fis","g","gis","a","ais","b"};
+	static String[] noteNames = {"c","cis","d","dis","e","f","fis","g","aes","a","ais","b"};
 
 	int midi;
 	String lilypond;

@@ -23,7 +23,7 @@ public class MovementTwo {
 		while(!goodToGo){
 
 			chords = new ArrayList<>();
-			for(int ind = 0; ind < 6; ind++){
+			for(int ind = 0; ind < ((mvmtOne.size() < 5) ? 6 : 4); ind++){
 				chord = new ArrayList<>();
 				for(int j =0; j <mvmtOne.size(); j ++){
 					chord.add(ThreadLocalRandom.current().nextInt(0, 4));
@@ -31,9 +31,12 @@ public class MovementTwo {
 				chords.add(chord);
 			}
 			ArrayList<Integer> finalChord = new ArrayList<>();
+			ArrayList<Integer> domChord = new ArrayList<>();
 			for(int smallindex = 0; smallindex<mvmtOne.size(); smallindex++){
+				domChord.add(1);
 				finalChord.add(2);
 			}
+			chords.add(domChord);
 			chords.add(finalChord);
 
 			goodToGo = true;
@@ -258,12 +261,12 @@ public class MovementTwo {
 		}
 		if(episodes > 6){
 			for(int vi= 0; vi< totalParts; vi++){
-				int index = getGoodIndex(mvmtOne,vi,chords.get(5).get(vi));
+				int index = getGoodIndex(mvmtOne,vi,chords.get(5%chords.size()).get(vi));
 				int solo = soloist.get(5);
 				if(vi == solo){
 					mvmtTwo.get(vi).addAll(TempNote.getExerpt(mvmtOne.get(vi),index,64));
 				}else{
-					mvmtTwo.get(vi).add(new TempNote(chords.get(5).get(vi),4));
+					mvmtTwo.get(vi).add(new TempNote(chords.get(5%chords.size()).get(vi),4));
 					mvmtTwo.get(vi).add(new TempNote(-1,4));
 					mvmtTwo.get(vi).add(new TempNote(-1,8));
 					mvmtTwo.get(vi).add(new TempNote(-1,16));
@@ -305,7 +308,7 @@ public class MovementTwo {
 				mvmtTwo.get(vi).add(new TempNote(1,4));
 
 			}else{
-				mvmtTwo.get(vi).add(new TempNote(chords.get(5).get(vi),4));
+				mvmtTwo.get(vi).add(new TempNote(chords.get(5%chords.size()).get(vi),4));
 				mvmtTwo.get(vi).add(new TempNote(-1,4));
 				mvmtTwo.get(vi).add(new TempNote(-1,8));
 				mvmtTwo.get(vi).add(new TempNote(-1,16));
