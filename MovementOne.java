@@ -231,6 +231,11 @@ public class MovementOne {
 		standing.open = true;
 		standing.pac = true;
 
+
+
+
+
+
 //Actually start composing the sonata now
 
 		ArrayList<Idea> sonata = new ArrayList<>();
@@ -252,16 +257,13 @@ public class MovementOne {
 
 		sonata.addAll(openingTheme);
 
-
-
-
+//Now Transition to Dominant
 
 		int transitionIndex = ThreadLocalRandom.current().nextInt(0,transitionOptions.size());;
 		Style thirdStyle = new Style(openingSecondStyle);
 		sonata.add(new Idea(transitionOptions.get(transitionIndex),thirdStyle,50));
 
-
-
+//Now Add the Second theme
 
 		ArrayList<Idea> secondTheme = new ArrayList<>();
 
@@ -286,17 +288,23 @@ public class MovementOne {
 
 		sonata.addAll(secondTheme);
 
+//Dat repeate bar
+
 		sonata.add(new Idea("\\bar \":|.\""));
 
+//Now on to the development
 
 		int developmentIndex = 0;
 		Style developmentStyle = new Style(secondSecondStyle);
 		sonata.add(new Idea(developmentOptions.get(developmentIndex),developmentStyle,50));
 		sonata.add(new Idea(standing,developmentStyle,50));//standing
 
+//And now we just add the opening theme verbatium back in, plus transition without modulation
+
 		sonata.addAll(openingTheme);
 		sonata.add(new Idea(transitionNoModOptions.get(transitionIndex),thirdStyle,55));
 
+//And also the second theme, but this time in the home key
 
 		ArrayList<Idea> secondThemeHomeKey = new ArrayList<>();
 		secondThemeHomeKey.add(new Idea(openingOptions.get(secondFirstAntIndex),secondFirstStyle,55));
@@ -304,12 +312,13 @@ public class MovementOne {
 		secondThemeHomeKey.add(new Idea(openingOptions.get(secondSecondAntIndex),secondSecondStyle,55));
 		secondThemeHomeKey.add(new Idea(endingOptionsWithoutCad.get(secondSecondConsIndex),secondSecondStyle,55));
 
-
 		sonata.addAll(secondThemeHomeKey);
+
+//Finish with a cood cadence confirmation. Sounds A-OK to me
 
 		sonata.add(new Idea(standing,developmentStyle,55));//standing
 
-
+//Go home you are done
 
 		return sonata;
 	}
