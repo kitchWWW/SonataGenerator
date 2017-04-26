@@ -150,10 +150,10 @@ public class MovementOne {
 		phr.blocks.add(new Block(4,12,10,7,8));	//V/IV
 		phr.blocks.add(new Block(5,12,9,5,8));	//IV
 		phr.blocks.add(new Block(5,14,9,9,8));	//ii6
-		phr.blocks.add(new Block(7,14,11,5,8));	//V7
-		phr.blocks.add(new Block(5,14,11,7,8));	//V42
-		phr.blocks.add(new Block(4,7,12,4,8));	//I6
-		phr.blocks.add(new Block(5,14,9,5,8));	//ii6
+		phr.blocks.add(new Block(7,14,11,5,4));	//V7
+		phr.blocks.add(new Block(5,14,11,7,4));	//V42
+		phr.blocks.add(new Block(4,7,12,4,4));	//I6
+		phr.blocks.add(new Block(5,14,9,5,4));	//ii6
 		phr.blocks.add(new Block(7,16,12,4,4));	//V64
 		phr.blocks.add(new Block(7,14,11,2,4));	//V53
 		phr.blocks.add(new Block(0,7,4,0,8));
@@ -180,10 +180,10 @@ public class MovementOne {
 		phr.blocks.add(new Block(-1,7,5,5,8));	//V65
 		phr.blocks.add(new Block(0,7,4,7,8));	//I
 		phr.blocks.add(new Block(5,14,9,9,8));	//ii6
-		phr.blocks.add(new Block(7,14,11,5,8));	//V7
-		phr.blocks.add(new Block(5,14,11,7,8));	//V42
-		phr.blocks.add(new Block(4,7,12,4,8));	//I6
-		phr.blocks.add(new Block(5,14,9,5,8));	//ii6
+		phr.blocks.add(new Block(7,14,11,5,4));	//V7
+		phr.blocks.add(new Block(5,14,11,7,4));	//V42
+		phr.blocks.add(new Block(4,7,12,4,4));	//I6
+		phr.blocks.add(new Block(5,14,9,5,4));	//ii6
 		phr.blocks.add(new Block(7,16,12,4,4));	//V64
 		phr.blocks.add(new Block(7,14,11,2,4));	//V53
 		phr.blocks.add(new Block(0,7,4,0,8));	//i
