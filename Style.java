@@ -201,9 +201,6 @@ public class Style{
 	}
 
 
-
-
-
 	public Style(Style s){
 		while(relate == s.relate){
 			relate = ThreadLocalRandom.current().nextInt(-1,2);

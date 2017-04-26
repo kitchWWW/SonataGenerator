@@ -135,10 +135,10 @@ public class MovementOne {
 
 		phr = new Phrase(2);
 		phr.blocks.add(new Block(4,12,7,4,8));	//I6
-		phr.blocks.add(new Block(5,12,9,5,8));	//IV
-		phr.blocks.add(new Block(4,12,7,4,8));	//I6
 		phr.blocks.add(new Block(5,12,9,0,8));	//IV
 		phr.blocks.add(new Block(4,12,7,4,8));	//I6
+		phr.blocks.add(new Block(5,12,9,0,8));	//IV
+		phr.blocks.add(new Block(4,12,7,7,8));	//I6
 		phr.blocks.add(new Block(7,16,12,4,4));	//V64
 		phr.blocks.add(new Block(7,14,11,2,4));	//V53
 		phr.blocks.add(new Block(12,16,12,0,16));	//I
@@ -148,11 +148,11 @@ public class MovementOne {
 		phr = new Phrase(2);
 		phr.blocks.add(new Block(5,12,9,9,8));	//IV
 		phr.blocks.add(new Block(4,12,10,7,8));	//V/IV
-		phr.blocks.add(new Block(5,12,9,9,8));	//IV
+		phr.blocks.add(new Block(5,12,9,5,8));	//IV
 		phr.blocks.add(new Block(5,14,9,9,8));	//ii6
-		phr.blocks.add(new Block(7,14,11,7,8));	//V7
+		phr.blocks.add(new Block(7,14,11,5,8));	//V7
 		phr.blocks.add(new Block(5,14,11,7,8));	//V42
-		phr.blocks.add(new Block(4,7,12,7,8));	//I6
+		phr.blocks.add(new Block(4,7,12,4,8));	//I6
 		phr.blocks.add(new Block(5,14,9,5,8));	//ii6
 		phr.blocks.add(new Block(7,16,12,4,4));	//V64
 		phr.blocks.add(new Block(7,14,11,2,4));	//V53
@@ -163,15 +163,15 @@ public class MovementOne {
 
 		ArrayList<Phrase> transitionNoModOptions = new ArrayList<>();
 
-		phr = new Phrase(2);
-		phr.blocks.add(new Block(-1,7,2,2,8));	//V6
-		phr.blocks.add(new Block(0,7,5,4,8));	//I
-		phr.blocks.add(new Block(-1,7,2,-1,8));	//V6
-		phr.blocks.add(new Block(0,9,5,-3,8));	//vi
-		phr.blocks.add(new Block(0,7,5,4,8));	//I
-		phr.blocks.add(new Block(-5,4,0,-8,4));	//V64
-		phr.blocks.add(new Block(-5,2,-1,-10,4));	//V53
-		phr.blocks.add(new Block(0,4,0,-12,16));	//I
+		phr = new Phrase(1);
+		phr.blocks.add(new Block(-1,7,2,11,8));	//V6
+		phr.blocks.add(new Block(0,7,4,7,8));	//I
+		phr.blocks.add(new Block(-1,7,2,11,8));	//V6
+		phr.blocks.add(new Block(0,9,5,9,8));	//vi
+		phr.blocks.add(new Block(0,7,5,7,8));	//I
+		phr.blocks.add(new Block(-5,4,0,4,4));	//V64
+		phr.blocks.add(new Block(-5,2,-1,2,4));	//V53
+		phr.blocks.add(new Block(0,4,0,0,16));	//I
 		phr.open = false;
 		transitionNoModOptions.add(phr);
 
@@ -180,9 +180,9 @@ public class MovementOne {
 		phr.blocks.add(new Block(-1,7,5,5,8));	//V65
 		phr.blocks.add(new Block(0,7,4,7,8));	//I
 		phr.blocks.add(new Block(5,14,9,9,8));	//ii6
-		phr.blocks.add(new Block(7,14,11,7,8));	//V7
+		phr.blocks.add(new Block(7,14,11,5,8));	//V7
 		phr.blocks.add(new Block(5,14,11,7,8));	//V42
-		phr.blocks.add(new Block(4,7,12,7,8));	//I6
+		phr.blocks.add(new Block(4,7,12,4,8));	//I6
 		phr.blocks.add(new Block(5,14,9,5,8));	//ii6
 		phr.blocks.add(new Block(7,16,12,4,4));	//V64
 		phr.blocks.add(new Block(7,14,11,2,4));	//V53
