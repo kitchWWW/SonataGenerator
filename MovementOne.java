@@ -8,7 +8,7 @@ public class MovementOne {
 
 		ArrayList<Note> mvmtOne = new ArrayList<>();
 
-		mvmtOne.add(60,4);
+		mvmtOne.add(new Note(60,4,""));
 
 		return mvmtOne;
 	}

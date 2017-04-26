@@ -1,10 +1,10 @@
-%#(set-global-staff-size 10)
+#(set-global-staff-size 10)
 
 \header{
 	tagline = "" 
-	title = "Interval Music"
+	title = "Epoch Music"
 	subtitle="#
-%timeStamp
+1485489233
 "
 }
 
@@ -26,17 +26,26 @@
 	subtitle="  "
 }
  \new  StaffGroup  <<
-%part0
-%part1
-%part2
-%part3
-%part4
-%part5
-%part6
-%part7
-%part8
-%part9
+
+\new Staff \with {
+    instrumentName = #"
+Guitar
+"
+	midiInstrument = "Acoustic Guitar (nylon)"
+  }
+\absolute {
+\clef
+"treble_8"
+
+c'4 
+
+	\bar "|."
+
+}
+
+
 >>
 \layout{}
 \midi{}
 }
+

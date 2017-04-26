@@ -11,10 +11,9 @@ java runner $timestamp {name:"guitar",staff:"treble_8",crescendo:true,tremolo:fa
 echo "Completed run"
 cd out/$timestamp
 
-/Applications/Lilypond.app/Contents/Resources/bin/lilypond EpochMusicScore.ly
-#lilypond EpochMusic.ly
-open EpochMusicScore.pdf
-open EpochMusicScore.midi
+/Applications/Lilypond.app/Contents/Resources/bin/lilypond IntervalMusicScore.ly
+open IntervalMusicScore.pdf
+open IntervalMusicScore.midi
 cd ..
 cd ..
 find . -name "*.class" -type f -delete

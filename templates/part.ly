@@ -6,6 +6,8 @@
 	midiInstrument = "%midi"
   }
 \absolute {
+\numericTimeSignature
+
 \clef
 %clef
 

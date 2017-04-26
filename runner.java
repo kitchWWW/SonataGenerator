@@ -20,10 +20,17 @@ public class runner {
 		insturments.add(new Insturment("Guitar","Acoustic Guitar (nylon)","\"treble_8\"",false,false));
 
 		ArrayList<Note> oneTemp = MovementOne.generate(intervals);
+		//System.out.println(oneTemp);
 
-		buildParts(timeStamp,"IntervalMusic", oneTemp,insturments);
+		String oneFinal = Note.toString(oneTemp);
+		//System.out.println(oneFinal);
 
+		ArrayList<String> finalPart = new ArrayList<>();
+		finalPart.add(oneFinal);
+		//System.out.println(finalPart);
 
+		buildParts(timeStamp,"IntervalMusic", finalPart,insturments);
+		//System.out.println("Done?");
 	}
 
 	private static void buildParts(String timeStamp, String title,
@@ -56,9 +63,7 @@ public class runner {
 		        }
 		        longParts.add(newPart);
 			}
-
-
-
+			
 			String res = "";
 			File file = new File("templates/score.ly");
 	        Scanner sc = new Scanner(file);
@@ -80,31 +85,6 @@ public class runner {
 	        }
         	sc.close();
 			PrintWriter writer = new PrintWriter("out/"+timeStamp+"/"+title+"Score.ly", "UTF-8");
-			writer.println(res);
-			writer.close();
-
-
-			res = "";
-			file = new File("templates/parts.ly");
-	        sc = new Scanner(file);
-
-	        while (sc.hasNextLine()) {
-	            String i = sc.nextLine();
-	            if(i.startsWith("%part")){
-	            	i = i.substring(5);
-	            	int index = Integer.parseInt(i);
-	            	if(index < longParts.size()){
-	            		res+= longParts.get(index) +"\n";
-	            	}
-	            }else if(i.startsWith("%timeStamp")){
-	            	res+= timeStamp +"\n";
-	            }
-	            else{
-	            	res+=i + "\n";
-	            }
-	        }
-        	sc.close();
-			writer = new PrintWriter("out/"+timeStamp+"/"+title+"Parts.ly", "UTF-8");
 			writer.println(res);
 			writer.close();
 
