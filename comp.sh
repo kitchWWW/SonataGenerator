@@ -11,9 +11,9 @@ java runner $timestamp {name:"guitar",staff:"treble_8",crescendo:true,tremolo:fa
 echo "Completed run"
 cd out/$timestamp
 
-/Applications/Lilypond.app/Contents/Resources/bin/lilypond IntervalMusicScore.ly
-open IntervalMusicScore.pdf
-open IntervalMusicScore.midi
+/Applications/Lilypond.app/Contents/Resources/bin/lilypond PianoSonataScore.ly
+open PianoSonataScore.pdf
+open PianoSonataScore.midi
 cd ..
 cd ..
 find . -name "*.class" -type f -delete

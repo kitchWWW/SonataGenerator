@@ -10,6 +10,7 @@ import java.util.Scanner;
 public class runner {
 
 	public static void main(String[] args) {
+
 		String  timeStamp = args[0];
 		ArrayList<Integer> intervals = new ArrayList<>();
 		intervals.add(0);
@@ -17,20 +18,31 @@ public class runner {
 		intervals.add(4);
 
 		ArrayList<Insturment> insturments = new ArrayList<>();
-		insturments.add(new Insturment("Guitar","Acoustic Guitar (nylon)","\"treble_8\"",false,false));
+		insturments.add(new Insturment("RH","","\"treble\"",false,false));
+		insturments.add(new Insturment("LH","","\"bass\"",false,false));
 
-		ArrayList<Note> oneTemp = MovementOne.generate(intervals);
-		//System.out.println(oneTemp);
+		ArrayList<Idea> oneTemp = MovementOne.generate();
+		ArrayList<ArrayList<Note>> pianoPart = Idea.toNotes(oneTemp);
+		pianoPart.get(1).add(0,new Note("\\tempo 4 = 112"));
+		pianoPart.get(0).add(0,new Note("\\key g \\major"));
+		pianoPart.get(1).add(0,new Note("\\key g \\major"));
+		String rhFinal = Note.toString(pianoPart.get(1));
+		String lhFinal = Note.toString(pianoPart.get(0));
 
-		String oneFinal = Note.toString(oneTemp);
+		//System.out.println(rhFinal);
+		//System.out.println(lhFinal);
+
+
+
 		//System.out.println(oneFinal);
 
 		ArrayList<String> finalPart = new ArrayList<>();
-		finalPart.add(oneFinal);
-		//System.out.println(finalPart);
-
-		buildParts(timeStamp,"IntervalMusic", finalPart,insturments);
+		finalPart.add(rhFinal);
+		finalPart.add(lhFinal);
+		buildParts(timeStamp,"PianoSonata", finalPart,insturments);
+		
 		//System.out.println("Done?");
+
 	}
 
 	private static void buildParts(String timeStamp, String title,
@@ -65,7 +77,7 @@ public class runner {
 			}
 			
 			String res = "";
-			File file = new File("templates/score.ly");
+			File file = new File("templates/piano.ly");
 	        Scanner sc = new Scanner(file);
 
 	        while (sc.hasNextLine()) {
