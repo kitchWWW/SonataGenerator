@@ -7,6 +7,7 @@ public class Style{
 
 	public int relate = 0;	//-1 = prev note, 0 = self, 1 = next
 	public int offset = 0;	//-1 ,0,1 (direction from current)
+	public int distance = 3; // 1 = chromatic, 2 = neighbor tone, 3 = chord tone
 	public int firstDuration = 1;//1,2,3
 	public int numbNotes = 0;
 	public int bassStyle = 0;
@@ -15,8 +16,12 @@ public class Style{
 
 
 	public Style(int numb){
-		relate= ThreadLocalRandom.current().nextInt(-1,2);
 		offset= ThreadLocalRandom.current().nextInt(-1,2);
+		relate = ThreadLocalRandom.current().nextInt(-1,2);
+		if(relate == 0 && offset == 0){
+			relate= ThreadLocalRandom.current().nextInt(-1,2);
+		}
+		distance= ThreadLocalRandom.current().nextInt(2,4);// lol we not going to do chromatic yet
 		firstDuration = ThreadLocalRandom.current().nextInt(1,4);
 		numbNotes = numb;
 		bassStyle = ThreadLocalRandom.current().nextInt(1,3);
@@ -32,7 +37,10 @@ public class Style{
 	}
 
 	//prevNote and nextNote should both 
-	public ArrayList<Note> melody(int key,int note, int dur, int prevNote, int nextNote, boolean hasPrev, boolean hasNext, int melodyCorrection){
+	public ArrayList<Note> melody(int key,Block blo, int prevNote, int nextNote, boolean hasPrev, boolean hasNext, int melodyCorrection){
+		int note = blo.melodyNote;
+		int dur = blo.duration;
+
 		ArrayList<Note> ret = new ArrayList<>();
 		
 		int index = realNotes.indexOf(prevNote);
@@ -62,14 +70,14 @@ public class Style{
 				secDir = 4 - firDir;
 			}
 			if(relate ==-1 && hasPrev){
-				ret.add(new Note(key+melodyCorrection+noteFromNote(prevNote,offset,note),firDir,""));
+				ret.add(new Note(key+melodyCorrection+noteFromNote(blo,prevNote,offset,note),firDir,""));
 				ret.add(new Note(key+melodyCorrection+note,secDir,""));
 
 			}else if (relate == 1 && hasNext){
 				ret.add(new Note(key+melodyCorrection+note,firDir,""));
-				ret.add(new Note(key+melodyCorrection+noteFromNote(nextNote,offset,note),secDir,""));
+				ret.add(new Note(key+melodyCorrection+noteFromNote(blo,nextNote,offset,note),secDir,""));
 			}else{
-				ret.add(new Note(key+melodyCorrection+noteFromNote(note,offset,note),firDir,""));
+				ret.add(new Note(key+melodyCorrection+noteFromNote(blo,note,offset,note),firDir,""));
 				ret.add(new Note(key+melodyCorrection+note,secDir,""));
 			}
 
@@ -120,11 +128,18 @@ public class Style{
 					thiDir = 0;	
 				}
 			}
-				ret.add(new Note(key+melodyCorrection+note,firDir,""));
-				ret.add(new Note(key+melodyCorrection+noteFromNote(note,offset,note),secDir,""));
-				if(thiDir != 0 ){
-					ret.add(new Note(key+melodyCorrection+note,thiDir,""));
-				}
+
+
+			ret.add(new Note(key+melodyCorrection+note,firDir,""));
+			if(offset ==0){
+				ret.add(new Note(key+melodyCorrection+noteFromNote(blo,note,-1,note),secDir,""));
+			}else{
+				ret.add(new Note(key+melodyCorrection+noteFromNote(blo,note,offset,note),secDir,""));
+			}
+
+			if(thiDir != 0 ){
+				ret.add(new Note(key+melodyCorrection+note,thiDir,""));
+			}
 
 		}else if(numbNotes == 4){
 
@@ -132,28 +147,59 @@ public class Style{
 		return ret;
 	}
 
-	private int noteFromNote(int orig, int relation,int avoid){
+	private int noteFromNote(Block b, int orig, int relation,int avoid){
 		if(relation == 0){
 			return orig;
 		}
-		int octaveCheck = 0;
-		if(orig < 0){
-			orig +=12;
-			octaveCheck = -12;
+		if (distance == 1){
+			System.out.println("MISTAKE!!!");
+			return orig + relation;
+		}else if(distance == 2){
+			int octaveCheck = 0;
+			if(orig < 0){
+				orig +=12;
+				octaveCheck = -12;
+			}
+			if(orig > 11){
+				orig -=12;
+				octaveCheck = 12;
+			}
+			if(distance == 2){
+				int index = realNotes.indexOf(orig%12) + relation;
+				if(index ==-1){
+					octaveCheck += -12;
+					index += 7;
+				}else if(index == 7){
+					octaveCheck += 12;
+					index -=7;
+				}
+				int result = realNotes.get(index) + octaveCheck;
+				if(result == avoid){
+					return noteFromNote(b,orig,-relation,avoid);
+				}
+				return result;
+			}
+		} else{//distance == 3
+			int candidate = -99999999;
+			ArrayList<Integer> possible = new ArrayList<>();
+			possible.add(b.midNote);
+			possible.add(b.highNote);
+			possible.add(b.baseNote);
+			for(int check = -4; check <4; check ++){
+				for(int i = 0; i < possible.size(); i++){
+					int checking = possible.get(i)-12*check;
+					if(orig - checking < orig - candidate && orig - checking >0){
+						candidate = checking;
+					}
+				}
+			}
+			if(orig - candidate > 6){
+				candidate = orig -1;
+			}
+
+			return candidate;
 		}
-		int index = realNotes.indexOf(orig%12) + relation;
-		if(index ==-1){
-			octaveCheck += -12;
-			index += 7;
-		}else if(index == 7){
-			octaveCheck += 12;
-			index -=7;
-		}
-		int result = realNotes.get(index) + octaveCheck;
-		if(result == avoid){
-			return noteFromNote(orig,-relation,avoid);
-		}
-		return result;
+		return orig;
 	}
 
 
@@ -167,46 +213,60 @@ public class Style{
 				ret.add(new Note(key+highN,2,""));
 			}
 		}else{
-			if(bassStyle == 1){
-				if(!pac){
-					ret.add(new Note(key+bassN,2,""));
-					ret.add(new Note(key+bassN+12,2,""));
-					ret.add(new Note(key+highN,2,""));
-					ret.add(new Note(key+midN,2,""));
-					ret.add(new Note(key+bassN,8,""));
-				}else{
-					ret.add(new Note(key+bassN,2,""));
-					ret.add(new Note(key+bassN-12,2,""));
-					ret.add(new Note(key+midN-12,2,""));
-					ret.add(new Note(key+highN-12,2,""));
-					ret.add(new Note(key+bassN,8,""));											
+			if(duration == 16){
+				if(bassStyle == 1){
+					if(!pac){
+						ret.add(new Note(key+bassN,2,""));
+						ret.add(new Note(key+bassN+12,2,""));
+						ret.add(new Note(key+highN,2,""));
+						ret.add(new Note(key+midN,2,""));
+						ret.add(new Note(key+bassN,8,""));
+					}else{
+						ret.add(new Note(key+bassN,2,""));
+						ret.add(new Note(key+bassN-12,2,""));
+						ret.add(new Note(key+midN-12,2,""));
+						ret.add(new Note(key+highN-12,2,""));
+						ret.add(new Note(key+bassN,8,""));											
+					}
+				}else if(bassStyle == 2){
+					if(!pac){
+						ret.add(new Note(-1,2,""));
+						ret.add(new Note(key+bassN,2,""));
+						ret.add(new Note(key+midN,2,""));
+						ret.add(new Note(key+highN,2,""));
+						ret.add(new Note(key+bassN+12,2,""));
+						ret.add(new Note(key+highN,2,""));
+						ret.add(new Note(key+midN,2,""));
+						ret.add(new Note(key+bassN,2,""));
+					}else{
+						ret.add(new Note(key+bassN,4,""));
+						ret.add(new Note(key+highN-12,4,""));
+						ret.add(new Note(key+bassN-12,8,""));
+					}
 				}
-			}else if(bassStyle == 2){
-				if(!pac){
-					ret.add(new Note(-1,2,""));
-					ret.add(new Note(key+bassN,2,""));
-					ret.add(new Note(key+midN,2,""));
-					ret.add(new Note(key+highN,2,""));
-					ret.add(new Note(key+midN,2,""));
-					ret.add(new Note(key+bassN,2,""));
-					ret.add(new Note(key+highN-12,4,""));
-				}else{
-					ret.add(new Note(key+bassN,4,""));
-					ret.add(new Note(key+highN-12,4,""));
-					ret.add(new Note(key+bassN-12,8,""));
-				}
+			}else{
+				ret.add(new Note(key+bassN,2,""));
+				ret.add(new Note(key+highN-12,2,""));
+				ret.add(new Note(key+bassN-12,4,""));
 			}
+			
 		}
 		return ret;
 	}
 
 
 	public Style(Style s){
-		while(relate == s.relate){
-			relate = ThreadLocalRandom.current().nextInt(-1,2);
-		}
+		relate = s.relate;
+		offset = s.offset;
+		distance = s.distance;
 		while(offset == s.offset){
 			offset = ThreadLocalRandom.current().nextInt(-1,2);
+		}
+		while(relate == s.relate || (offset == 0 && relate == 0)){
+			relate = ThreadLocalRandom.current().nextInt(-1,2);
+		}
+		while(distance == s.distance){
+			distance = ThreadLocalRandom.current().nextInt(2,4);
 		}
 		while(firstDuration == s.firstDuration){
 			firstDuration = ThreadLocalRandom.current().nextInt(1,4);

@@ -35,6 +35,10 @@ public class Note {
 		duration = dur;
 		if(midi == -1){
 			pitch = "r";
+		}else if(midi < -1){
+			System.out.println("BAD MIDI NUMBER!");
+			System.out.println("Pitch: "+midi);
+			
 		}else{
 			pitch = noteNames[midi%12];
 			int octave = midi/12;
