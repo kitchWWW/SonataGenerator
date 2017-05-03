@@ -9,13 +9,18 @@ public class Block {
 	public int midNote;	//midi
 	public int melodyNote;//midi
 	public int duration;	//in 16th notes
+	public String topLily;
+	public String basLily;
 
-	public Block(int bass, int high, int low, int melody, int dur){
+	public Block(int bass, int high, int low, int melody, int dur, String top, String bottom){
 		baseNote = bass;
 		highNote = high;
 		midNote = low;
 		melodyNote = melody;
 		duration = dur;
+		topLily = top;
+		basLily = bottom;
+		//System.out.println(topLily);
 	}
 
 	public String toString(){

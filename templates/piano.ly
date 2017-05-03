@@ -1,4 +1,5 @@
 %#(set-global-staff-size 10)
+\version "2.18.2"
 
 \header{
 	tagline = "" 
@@ -15,7 +16,7 @@
   right-margin = 1.5\cm
   top-margin = 2\cm
   bottom-margin = 1.5\cm
-  ragged-last-bottom = ##t
+  ragged-last-bottom = ##f
   print-all-headers = ##t
   print-page-number = ##f
 }

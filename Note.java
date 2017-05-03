@@ -6,7 +6,7 @@ public class Note {
 	static String[] noteNames = {"c","cis","d","dis","e","f","fis","g","aes","a","ais","b"};
 
 	int midi;
-	String lilypond;
+	public String lilypond;
 	int duration;//in 16th notes
 	String pitch;
 

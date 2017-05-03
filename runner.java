@@ -23,11 +23,28 @@ public class runner {
 
 		ArrayList<Idea> oneTemp = MovementOne.generate();
 		ArrayList<ArrayList<Note>> pianoPart = Idea.toNotes(oneTemp);
-		pianoPart.get(1).add(0,new Note("\\tempo 4 = 112"));
+		pianoPart.get(1).add(0,new Note("\\tempo Allegro 4 = 112"));
 		pianoPart.get(0).add(0,new Note("\\key g \\major"));
 		pianoPart.get(1).add(0,new Note("\\key g \\major"));
 		String rhFinal = Note.toString(pianoPart.get(1));
 		String lhFinal = Note.toString(pianoPart.get(0));
+
+
+		String[] labels = {"P.T.\" ^\"Exposition","","S.T.","","Standing on V","","P.T.\" ^\"Recapitulation","","S.T.","","","PAC"};
+		int index = 0;
+		while(rhFinal.indexOf("\n%lab\n")!= -1){
+			int ind = rhFinal.indexOf("\n%lab\n");
+			rhFinal = rhFinal.substring(0,ind)+labels[index]+rhFinal.substring(ind+6);
+			index++;
+		}
+
+		String[] keys = {"G:","","D:","","","I / G:V","(G:)","","","","I","","","","","","",""};
+		index = 0;
+		while(lhFinal.indexOf("\n%key\n")!= -1){
+			int ind = lhFinal.indexOf("\n%key\n");
+			lhFinal = lhFinal.substring(0,ind)+keys[index]+lhFinal.substring(ind+6);
+			index++;
+		}
 
 		//System.out.println(rhFinal);
 		//System.out.println(lhFinal);
