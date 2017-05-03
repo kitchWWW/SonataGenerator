@@ -14,7 +14,7 @@ public class MovementOne {
 		openingOptions.add(phr);
 		phr = new Phrase(1);
 		phr.blocks.add(new Block(0,7,4,4,8,"\n%lab\n","\n%key\nI"));
-		phr.blocks.add(new Block(-1,7,5,2,8,"mi-fa-mi","V65"));
+		phr.blocks.add(new Block(-1,7,5,2,8,"mi-re-mi","V65"));
 		phr.blocks.add(new Block(0,7,4,4,16,"","I"));
 		phr.open = false;
 		openingOptions.add(phr);
