@@ -216,7 +216,7 @@ public class MovementOne {
 		phr.blocks.add(new Block(0,7,5,4,8,"Development","I"));	//I
 		phr.blocks.add(new Block(-1,7,2,2,8,"","V6"));	//V6
 		phr.blocks.add(new Block(-3,4,0,0,8,"","vi"));	//vi
-		phr.blocks.add(new Block(-5,4,-1,4,8,"","iii"));	//iii
+		phr.blocks.add(new Block(-5,4,-1,4,8,"","iii6"));	//iii
 		phr.blocks.add(new Block(-7,0,-3,5,8,"","IV"));	//IV
 		phr.blocks.add(new Block(-7,2,-1,7,8,"","V42"));	//V42
 		phr.blocks.add(new Block(-8,0,-5,4,16,"","I6"));	//I6
@@ -224,7 +224,7 @@ public class MovementOne {
 		phr.blocks.add(new Block(0,7,5,4,4,"","I"));	//I
 		phr.blocks.add(new Block(-1,7,2,5,4,"","V6"));	//V6
 		phr.blocks.add(new Block(-3,4,0,4,4,"","vi"));	//vi
-		phr.blocks.add(new Block(-5,4,-1,4,4,"","iii"));	//iii
+		phr.blocks.add(new Block(-5,4,-1,4,4,"","iii6"));	//iii
 		phr.blocks.add(new Block(-7,0,-3,5,8,"","IV"));	//IV
 		phr.blocks.add(new Block(-8,0,-5,4,8,"","I6"));	//I6
 		phr.blocks.add(new Block(-7,2,-3,2,8,"","ii6"));	//ii6
