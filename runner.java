@@ -59,7 +59,7 @@ public class runner {
 			index++;
 		}
 
-		String[] keys = {"G:","","D:","","","I / G:V","(G:)","","","","I","","","","","","",""};
+		String[] keys = {"T:","","D:","","","I / T:(V)","T:","","","","I","","","","","","",""};
 		index = 0;
 		while(lhFinal.indexOf("\n%key\n")!= -1){
 			int ind = lhFinal.indexOf("\n%key\n");
