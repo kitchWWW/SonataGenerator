@@ -18,7 +18,7 @@ public class runner {
 		boolean analyze = (boolean) (Integer.parseInt(args[4])==1);//true if ==1, false(no writing) if 2
 
 		if(key < 49 || key > 60){
-			key = 55
+			key = 55;
 		}
 
 		int keyType = 0;
