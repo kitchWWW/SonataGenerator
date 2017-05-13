@@ -3,8 +3,16 @@ import java.util.ArrayList;
 
 public class Note {
 
-	static String[] noteNames = {"c","cis","d","dis","e","f","fis","g","aes","a","ais","b"};
 
+	//0 = sharps and flats
+	//1 = sharps
+	//2 = flats
+	//3 = double fucking sharps
+	static String[][] noteNames = {{"c","cis","d","ees","e","f","fis","g","aes","a","bes","b"},
+	{"c","cis","d","dis","e","f","fis","g","gis","a","ais","b"},
+	{"c","des","d","ees","e","f","ges","g","aes","a","bes","b"},
+	{"bis","cis","d","dis","e","eis","fis","g","gis","a","ais","b"}};
+	
 	int midi;
 	public String lilypond;
 	int duration;//in 16th notes
@@ -18,6 +26,10 @@ public class Note {
 		return sum;
 	}
 
+	public static String stringFromMidiNumber(int value,int keyType){
+		return noteNames[keyType][value%12];
+	}
+
 	public static String toString(ArrayList<Note> notes){
 		String ret = "";
 		for(Note n : notes){
@@ -26,7 +38,7 @@ public class Note {
 		return ret;
 	}
 
-	public Note(int pitchValue, int dur, String message){
+	public Note(int keyType, int pitchValue, int dur, String message){
 		midi = pitchValue;
 		if(dur>16 || dur <1){
 			dur = 16;
@@ -40,8 +52,12 @@ public class Note {
 			System.out.println("Pitch: "+midi);
 			
 		}else{
-			pitch = noteNames[midi%12];
+			pitch = noteNames[keyType][midi%12];
 			int octave = midi/12;
+			//fucking b# man
+			if(midi%12==0 && keyType == 3){
+				octave--;
+			}
 	 		octave -= 4;
 	 		while(octave!=0){
 	 			if(octave>0){

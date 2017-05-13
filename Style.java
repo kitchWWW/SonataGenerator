@@ -11,11 +11,16 @@ public class Style{
 	public int firstDuration = 1;//1,2,3
 	public int numbNotes = 0;
 	public int bassStyle = 0;
+	public int keyType = 0;
 	//Integer[] notes = {0,2,4,5,7,9,11};
 	ArrayList<Integer> realNotes = new ArrayList<>();//Arrays.asList(notes)
 
 
-	public Style(int numb){
+	public Style(int numb,int keyVariety){
+
+
+
+		keyType = keyVariety;
 		offset= ThreadLocalRandom.current().nextInt(-1,2);
 		relate = ThreadLocalRandom.current().nextInt(-1,2);
 		if(relate == 0 && offset == 0){
@@ -23,9 +28,23 @@ public class Style{
 		}
 		distance= ThreadLocalRandom.current().nextInt(2,4);// lol we not going to do chromatic yet
 		firstDuration = ThreadLocalRandom.current().nextInt(1,4);
-		numbNotes = numb;
 		bassStyle = ThreadLocalRandom.current().nextInt(1,4);
 		
+
+		if(numb == 0){//quarter notes
+			numbNotes = 2;
+			firstDuration = 2;
+		}else if(numb == 1){//eight note - dotted quarter
+			numbNotes = 2;
+			firstDuration = 1;
+		}else if(numb == 2){//dotted quarter - eight note
+			numbNotes = 2;
+			firstDuration = 3;
+		}else if(numb == 3){//three notes
+			numbNotes = 3;
+		}else if(numb == 4){//runs and fun stuff
+			numbNotes = 4;
+		}
 
 		realNotes.add(0);
 		realNotes.add(2);
@@ -37,7 +56,7 @@ public class Style{
 	}
 
 	//prevNote and nextNote should both 
-	public ArrayList<Note> melody(int key,Block blo, int prevNote, int nextNote, boolean hasPrev, boolean hasNext, int melodyCorrection, boolean open){
+	public ArrayList<Note> melody(int key,Block blo, int prevNote, int nextNote, boolean hasPrev, boolean hasNext, int melodyCorrection, boolean open,boolean trill){
 		int note = blo.melodyNote;
 		int dur = blo.duration;
 		String melLily = blo.topLily;
@@ -45,8 +64,14 @@ public class Style{
 		
 		int index = realNotes.indexOf(prevNote);
 
+		if(trill){
+			ret.add(new Note(keyType,key+melodyCorrection+note,16,""));
+			ret.get(0).lilypond += "\\trill";
+			return ret;
+		}
+
 		if(dur <16 && open){
-			ret.add(new Note(key+melodyCorrection+note,dur,""));
+			ret.add(new Note(keyType,key+melodyCorrection+note,dur,""));
 			ret.get(0).lilypond += "^\""+melLily+"\"";
 			return ret;
 		}
@@ -71,15 +96,15 @@ public class Style{
 				secDir = 4 - firDir;
 			}
 			if(relate ==-1 && hasPrev){
-				ret.add(new Note(key+melodyCorrection+noteFromNote(blo,prevNote,offset,note),firDir,""));
-				ret.add(new Note(key+melodyCorrection+note,secDir,""));
+				ret.add(new Note(keyType,key+melodyCorrection+noteFromNote(blo,prevNote,offset,note),firDir,""));
+				ret.add(new Note(keyType,key+melodyCorrection+note,secDir,""));
 
 			}else if (relate == 1 && hasNext){
-				ret.add(new Note(key+melodyCorrection+note,firDir,""));
-				ret.add(new Note(key+melodyCorrection+noteFromNote(blo,nextNote,offset,note),secDir,""));
+				ret.add(new Note(keyType,key+melodyCorrection+note,firDir,""));
+				ret.add(new Note(keyType,key+melodyCorrection+noteFromNote(blo,nextNote,offset,note),secDir,""));
 			}else{
-				ret.add(new Note(key+melodyCorrection+noteFromNote(blo,note,offset,note),firDir,""));
-				ret.add(new Note(key+melodyCorrection+note,secDir,""));
+				ret.add(new Note(keyType,key+melodyCorrection+noteFromNote(blo,note,offset,note),firDir,""));
+				ret.add(new Note(keyType,key+melodyCorrection+note,secDir,""));
 			}
 
 		}else if (numbNotes == 3){
@@ -131,52 +156,69 @@ public class Style{
 			}
 
 
-			ret.add(new Note(key+melodyCorrection+note,firDir,""));
+			ret.add(new Note(keyType,key+melodyCorrection+note,firDir,""));
 			if(dur==16 || (dur == 8 && !hasNext)){
-				ret.add(new Note(key+melodyCorrection+notesScaleRelate(note,-1),secDir,""));
+				ret.add(new Note(keyType,key+melodyCorrection+notesScaleRelate(note,-1),secDir,""));
 			}else{
 				if(offset ==0){
-					ret.add(new Note(key+melodyCorrection+noteFromNote(blo,note,-1,note),secDir,""));
+					ret.add(new Note(keyType,key+melodyCorrection+noteFromNote(blo,note,-1,note),secDir,""));
 				}else{
-					ret.add(new Note(key+melodyCorrection+noteFromNote(blo,note,offset,note),secDir,""));	
+					ret.add(new Note(keyType,key+melodyCorrection+noteFromNote(blo,note,offset,note),secDir,""));	
 				}
 			}
 			if(thiDir != 0 ){
-				ret.add(new Note(key+melodyCorrection+note,thiDir,""));
+				ret.add(new Note(keyType,key+melodyCorrection+note,thiDir,""));
 			}
 
 		}else if(numbNotes == 4){
 			int direction = relate;
 			if(direction == 0){direction = 1;}
 			if(hasNext){
+				if(dur==16){
+					ret.add(new Note(keyType,key+melodyCorrection+note,4,""));
+					ret.add(new Note(keyType,key+melodyCorrection+notesScaleRelate(note,0),1,""));
+					ret.add(new Note(keyType,key+melodyCorrection+notesScaleRelate(note,1*direction),1,""));
+					ret.add(new Note(keyType,key+melodyCorrection+notesScaleRelate(note,2*direction),1,""));
+					ret.add(new Note(keyType,key+melodyCorrection+notesScaleRelate(note,1*direction),1,""));
+					ret.add(new Note(keyType,key+melodyCorrection+notesScaleRelate(note,0),1,""));
+					ret.add(new Note(keyType,key+melodyCorrection+notesScaleRelate(note,-1*direction),1,""));
+					ret.add(new Note(keyType,key+melodyCorrection+notesScaleRelate(note,-2*direction),1,""));
+					ret.add(new Note(keyType,key+melodyCorrection+notesScaleRelate(note,-1*direction),1,""));
+					ret.add(new Note(keyType,key+melodyCorrection+note,2,""));
+					ret.add(new Note(keyType,key+melodyCorrection+notesScaleRelate(nextNote,2*direction),1,""));
+					ret.add(new Note(keyType,key+melodyCorrection+notesScaleRelate(nextNote,1*direction),1,""));
+				}
 				if(dur == 8){
-					ret.add(new Note(key+melodyCorrection+note,6,""));
-					ret.add(new Note(key+melodyCorrection+notesScaleRelate(nextNote,2*direction),1,""));
-					ret.add(new Note(key+melodyCorrection+notesScaleRelate(nextNote,1*direction),1,""));									
+					ret.add(new Note(keyType,key+melodyCorrection+note,6,""));
+					ret.add(new Note(keyType,key+melodyCorrection+notesScaleRelate(nextNote,2*direction),1,""));
+					ret.add(new Note(keyType,key+melodyCorrection+notesScaleRelate(nextNote,1*direction),1,""));									
 				}
 				if(dur == 4){
-					ret.add(new Note(key+melodyCorrection+note,2,""));
-					ret.add(new Note(key+melodyCorrection+notesScaleRelate(nextNote,2*direction),1,""));
-					ret.add(new Note(key+melodyCorrection+notesScaleRelate(nextNote,1*direction),1,""));									
+					ret.add(new Note(keyType,key+melodyCorrection+note,2,""));
+					ret.add(new Note(keyType,key+melodyCorrection+notesScaleRelate(nextNote,2*direction),1,""));
+					ret.add(new Note(keyType,key+melodyCorrection+notesScaleRelate(nextNote,1*direction),1,""));									
 				}
 			}else{
 				if(dur==16){
-					ret.add(new Note(key+melodyCorrection+note,4,""));
-					ret.add(new Note(key+melodyCorrection+notesScaleRelate(note,0),1,""));
-					ret.add(new Note(key+melodyCorrection+notesScaleRelate(note,1*direction),1,""));
-					ret.add(new Note(key+melodyCorrection+notesScaleRelate(note,2*direction),1,""));
-					ret.add(new Note(key+melodyCorrection+notesScaleRelate(note,1*direction),1,""));
-					ret.add(new Note(key+melodyCorrection+note,8,""));
+					ret.add(new Note(keyType,key+melodyCorrection+note,4,""));
+					ret.add(new Note(keyType,key+melodyCorrection+notesScaleRelate(note,0),1,""));
+					ret.add(new Note(keyType,key+melodyCorrection+notesScaleRelate(note,1*direction),1,""));
+					ret.add(new Note(keyType,key+melodyCorrection+notesScaleRelate(note,2*direction),1,""));
+					ret.add(new Note(keyType,key+melodyCorrection+notesScaleRelate(note,1*direction),1,""));
+					ret.add(new Note(keyType,key+melodyCorrection+note,8,""));
 				}if(dur==8){
-					ret.add(new Note(key+melodyCorrection+notesScaleRelate(note,0),1,""));
-					ret.add(new Note(key+melodyCorrection+notesScaleRelate(note,1*direction),1,""));
-					ret.add(new Note(key+melodyCorrection+notesScaleRelate(note,2*direction),1,""));
-					ret.add(new Note(key+melodyCorrection+notesScaleRelate(note,1*direction),1,""));
-					ret.add(new Note(key+melodyCorrection+note,4,""));
+					ret.add(new Note(keyType,key+melodyCorrection+notesScaleRelate(note,0),1,""));
+					ret.add(new Note(keyType,key+melodyCorrection+notesScaleRelate(note,1*direction),1,""));
+					ret.add(new Note(keyType,key+melodyCorrection+notesScaleRelate(note,2*direction),1,""));
+					ret.add(new Note(keyType,key+melodyCorrection+notesScaleRelate(note,1*direction),1,""));
+					ret.add(new Note(keyType,key+melodyCorrection+note,4,""));
+				}if(dur==4){
+					ret.add(new Note(keyType,key+melodyCorrection+note,4,""));					
 				}
 			}
 		}
-		//System.out.println(numbNotes+" "+key+" "+blo+" "+prevNote+" "+nextNote+" "+hasPrev+" "+hasNext+" "+melodyCorrection+" "+open);
+	//	System.out.println(numbNotes+" "+key+" "+dur+" "+blo+" "+prevNote+" "+nextNote+" "+hasPrev+" "+hasNext+" "+melodyCorrection+" "+open);
+
 		ret.get(0).lilypond += "^\""+melLily+"\"";
 		return ret;
 	}
@@ -244,6 +286,7 @@ public class Style{
 			possible.add(b.midNote);
 			possible.add(b.highNote);
 			possible.add(b.baseNote);
+			possible.add(b.melodyNote);
 			for(int check = -4; check <4; check ++){
 				for(int i = 0; i < possible.size(); i++){
 					int checking = possible.get(i)-12*check;
@@ -265,96 +308,65 @@ public class Style{
 	public ArrayList<Note> bass(int key, int bassN, int highN, int midN, int duration, boolean open,boolean pac,String bassMessage){
 		ArrayList<Note> ret = new ArrayList<>();
 		if(!open){
-			ret.add(new Note(key+bassN,2,""));
-			ret.add(new Note(key+highN,2,""));
+			ret.add(new Note(keyType,key+bassN,2,""));
+			ret.add(new Note(keyType,key+highN,2,""));
 			while(Note.dur(ret)<duration){
-				ret.add(new Note(key+midN,2,""));
-				ret.add(new Note(key+highN,2,""));
+				ret.add(new Note(keyType,key+midN,2,""));
+				ret.add(new Note(keyType,key+highN,2,""));
 			}
 		}else{
 			if(duration == 16){
 				if(bassStyle == 1){
 					if(!pac){
-						ret.add(new Note(key+bassN,2,""));
-						ret.add(new Note(key+bassN+12,2,""));
-						ret.add(new Note(key+highN,2,""));
-						ret.add(new Note(key+midN,2,""));
-						ret.add(new Note(key+bassN,8,""));
+						ret.add(new Note(keyType,key+bassN,2,""));
+						ret.add(new Note(keyType,key+bassN+12,2,""));
+						ret.add(new Note(keyType,key+highN,2,""));
+						ret.add(new Note(keyType,key+midN,2,""));
+						ret.add(new Note(keyType,key+bassN,8,""));
 					}else{
-						ret.add(new Note(key+bassN,4,""));
-						ret.add(new Note(key+midN,4,""));
-						ret.add(new Note(key+bassN,8,""));										
+						ret.add(new Note(keyType,key+bassN,4,""));
+						ret.add(new Note(keyType,key+midN,4,""));
+						ret.add(new Note(keyType,key+bassN,8,""));										
 					}
 				}else if(bassStyle == 2){
 					if(!pac){
-						ret.add(new Note(-1,2,""));
-						ret.add(new Note(key+bassN,2,""));
-						ret.add(new Note(key+midN,2,""));
-						ret.add(new Note(key+highN,2,""));
-						ret.add(new Note(key+bassN+12,2,""));
-						ret.add(new Note(key+highN,2,""));
-						ret.add(new Note(key+midN,2,""));
-						ret.add(new Note(key+bassN,2,""));
+						ret.add(new Note(keyType,-1,2,""));
+						ret.add(new Note(keyType,key+bassN,2,""));
+						ret.add(new Note(keyType,key+midN,2,""));
+						ret.add(new Note(keyType,key+highN,2,""));
+						ret.add(new Note(keyType,key+bassN+12,2,""));
+						ret.add(new Note(keyType,key+highN,2,""));
+						ret.add(new Note(keyType,key+midN,2,""));
+						ret.add(new Note(keyType,key+bassN,2,""));
 					}else{
-						ret.add(new Note(key+bassN,4,""));
-						ret.add(new Note(key+highN-12,4,""));
-						ret.add(new Note(key+bassN,8,""));
+						ret.add(new Note(keyType,key+bassN,4,""));
+						ret.add(new Note(keyType,key+highN-12,4,""));
+						ret.add(new Note(keyType,key+bassN,8,""));
 					}
 				}else if(bassStyle == 3){
 					if(!pac){
-						ret.add(new Note(-1,2,""));
-						ret.add(new Note(key+bassN,2,""));
-						ret.add(new Note(key+midN,2,""));
-						ret.add(new Note(key+highN,2,""));
-						ret.add(new Note(key+bassN+12,2,""));
-						ret.add(new Note(key+notesScaleRelate(bassN,-1)+12,2,""));
-						ret.add(new Note(key+notesScaleRelate(bassN,-2)+12,2,""));
-						ret.add(new Note(key+notesScaleRelate(bassN,-3)+12,2,""));
+						ret.add(new Note(keyType,-1,2,""));
+						ret.add(new Note(keyType,key+bassN,2,""));
+						ret.add(new Note(keyType,key+midN,2,""));
+						ret.add(new Note(keyType,key+highN,2,""));
+						ret.add(new Note(keyType,key+bassN+12,2,""));
+						ret.add(new Note(keyType,key+notesScaleRelate(bassN,-1)+12,2,""));
+						ret.add(new Note(keyType,key+notesScaleRelate(bassN,-2)+12,2,""));
+						ret.add(new Note(keyType,key+notesScaleRelate(bassN,-3)+12,2,""));
 					}else{
-						ret.add(new Note(key+bassN,4,""));
-						ret.add(new Note(key+highN,4,""));
-						ret.add(new Note(key+bassN,8,""));
+						ret.add(new Note(keyType,key+bassN,4,""));
+						ret.add(new Note(keyType,key+highN,4,""));
+						ret.add(new Note(keyType,key+bassN,8,""));
 					}
 				}
 			}else{
-				ret.add(new Note(key+bassN,2,""));
-				ret.add(new Note(key+highN-12,2,""));
-				ret.add(new Note(key+bassN-12,4,""));
+				ret.add(new Note(keyType,key+bassN,2,""));
+				ret.add(new Note(keyType,key+highN-12,2,""));
+				ret.add(new Note(keyType,key+bassN-12,4,""));
 			}
 			
 		}
 		ret.get(0).lilypond += "_\""+bassMessage+"\"";
 		return ret;
-	}
-
-
-	public Style(Style s){
-		relate = s.relate;
-		offset = s.offset;
-		distance = s.distance;
-		bassStyle = s.bassStyle;
-		while(offset == s.offset){
-			offset = ThreadLocalRandom.current().nextInt(-1,2);
-		}
-		while(relate == s.relate || (offset == 0 && relate == 0)){
-			relate = ThreadLocalRandom.current().nextInt(-1,2);
-		}
-		while(distance == s.distance){
-			distance = ThreadLocalRandom.current().nextInt(2,4);
-		}
-		while(firstDuration == s.firstDuration){
-			firstDuration = ThreadLocalRandom.current().nextInt(1,4);
-		}while(bassStyle == s.bassStyle){
-			bassStyle = ThreadLocalRandom.current().nextInt(1,4);
-		}
-		numbNotes = s.numbNotes;
-
-		realNotes.add(0);
-		realNotes.add(2);
-		realNotes.add(4);
-		realNotes.add(5);
-		realNotes.add(7);
-		realNotes.add(9);
-		realNotes.add(11);
 	}
 }

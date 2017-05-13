@@ -12,20 +12,41 @@ public class runner {
 	public static void main(String[] args) {
 
 		String  timeStamp = args[0];
-		ArrayList<Integer> intervals = new ArrayList<>();
-		intervals.add(0);
-		intervals.add(1);
-		intervals.add(4);
+		int key = (int) Integer.parseInt(args[1]);
+		int ptType = (int) Integer.parseInt(args[2]);
+		int stType = (int) Integer.parseInt(args[3]);
+		boolean analyze = (boolean) (Integer.parseInt(args[4])==1);//true if ==1, false(no writing) if 2
+
+		if(key < 49 || key > 60){
+			key = 55
+		}
+
+		int keyType = 0;
+		if((key%12 == 0 || key%12 == 5 || key%12 == 7)){
+			keyType = 0;
+		}else if(key%12 == 2 || key%12 == 4 ||key%12 == 9){
+			keyType = 1;
+		}else if(key% 12== 11||key%12 == 6 ){
+			keyType = 3;
+		}else{
+			keyType = 2;
+		}
+		System.out.println("Key type: "+ keyType);
 
 		ArrayList<Insturment> insturments = new ArrayList<>();
 		insturments.add(new Insturment("RH","","\"treble\"",false,false));
 		insturments.add(new Insturment("LH","","\"bass\"",false,false));
 
-		ArrayList<Idea> oneTemp = MovementOne.generate();
+		ArrayList<Idea> oneTemp = MovementOne.generate(key,keyType,ptType,stType,analyze);
 		ArrayList<ArrayList<Note>> pianoPart = Idea.toNotes(oneTemp);
+
+		pianoPart.get(0).add(0,new Note("\\key "+Note.stringFromMidiNumber(key,keyType)+" \\major \\partial 8 { r8 }"));
+		if(key<60){
+			pianoPart.get(1).add(0,new Note("\\key "+Note.stringFromMidiNumber(key,keyType)+" \\major \\partial 8 { "+Note.stringFromMidiNumber(key,keyType)+"'8 }"));			
+		}else{
+			pianoPart.get(1).add(0,new Note("\\key "+Note.stringFromMidiNumber(key,keyType)+" \\major \\partial 8 { "+Note.stringFromMidiNumber(key,keyType)+"''8 }"));
+		}
 		pianoPart.get(1).add(0,new Note("\\tempo Allegro 4 = 112"));
-		pianoPart.get(0).add(0,new Note("\\key g \\major"));
-		pianoPart.get(1).add(0,new Note("\\key g \\major"));
 		String rhFinal = Note.toString(pianoPart.get(1));
 		String lhFinal = Note.toString(pianoPart.get(0));
 

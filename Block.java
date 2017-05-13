@@ -11,15 +11,23 @@ public class Block {
 	public int duration;	//in 16th notes
 	public String topLily;
 	public String basLily;
+	public boolean analyze;
 
-	public Block(int bass, int high, int low, int melody, int dur, String top, String bottom){
+	public Block(boolean markups,int bass, int high, int low, int melody, int dur, String top, String bottom){
 		baseNote = bass;
 		highNote = high;
 		midNote = low;
 		melodyNote = melody;
 		duration = dur;
-		topLily = top;
-		basLily = bottom;
+		analyze = markups;
+		if(analyze){
+			topLily = top;
+			basLily = bottom;
+		}else{
+			topLily = "";
+			basLily = "";
+		}
+		
 		//System.out.println(topLily);
 	}
 

@@ -7,7 +7,7 @@ find . -name "*.class" -type f -delete
 javac runner.java
 echo "Completed compile portion"
 
-java runner $timestamp {name:"guitar",staff:"treble_8",crescendo:true,tremolo:false,notes:[71,72,74,76],midi:"violin"}
+java runner $timestamp 51 1 1 2
 echo "Completed run"
 cd out/$timestamp
 
