@@ -8,6 +8,7 @@ public class Note {
 	//1 = sharps
 	//2 = flats
 	//3 = double fucking sharps
+	static String[] titleNames = {"C","C#","D","Eb","E","F","F#","G","Ab","A","Bb","B"};
 	static String[][] noteNames = {{"c","cis","d","ees","e","f","fis","g","aes","a","bes","b"},
 	{"c","cis","d","dis","e","f","fis","g","gis","a","ais","b"},
 	{"c","des","d","ees","e","f","ges","g","aes","a","bes","b"},
@@ -28,6 +29,10 @@ public class Note {
 
 	public static String stringFromMidiNumber(int value,int keyType){
 		return noteNames[keyType][value%12];
+	}
+
+	public static String title(int value){
+		return titleNames[value%12];
 	}
 
 	public static String toString(ArrayList<Note> notes){

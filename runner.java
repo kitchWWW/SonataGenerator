@@ -77,13 +77,13 @@ public class runner {
 		ArrayList<String> finalPart = new ArrayList<>();
 		finalPart.add(rhFinal);
 		finalPart.add(lhFinal);
-		buildParts(timeStamp,"PianoSonata", finalPart,insturments);
+		buildParts(key,timeStamp,"PianoSonata", finalPart,insturments);
 		
 		//System.out.println("Done?");
 
 	}
 
-	private static void buildParts(String timeStamp, String title,
+	private static void buildParts(int key, String timeStamp, String title,
 		ArrayList<String> parts, ArrayList<Insturment> insturments){
 		try {
 			ArrayList<String> longParts = new ArrayList<>();
@@ -126,6 +126,8 @@ public class runner {
 	            	if(index < longParts.size()){
 	            		res+= longParts.get(index) +"\n";
 	            	}
+	            }else if(i.startsWith("%titleKey")){
+	            	res+= Note.title(key)+' ';
 	            }else if(i.startsWith("%timeStamp")){
 	            	res+= timeStamp +"\n";
 	            }

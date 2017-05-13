@@ -3,7 +3,10 @@
 
 \header{
 	tagline = "" 
-	title = "Piano Sonata"
+	title = "Piano Sonata in
+%titleKey
+Major
+"
 	composer = "Brian Ellis"
 	subtitle="#
 %timeStamp
