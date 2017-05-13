@@ -56,7 +56,7 @@ public class Style{
 	}
 
 	//prevNote and nextNote should both 
-	public ArrayList<Note> melody(int key,Block blo, int prevNote, int nextNote, boolean hasPrev, boolean hasNext, int melodyCorrection, boolean open,boolean trill){
+	public ArrayList<Note> melody(int key,Block blo, int prevNote, int nextNote, boolean hasPrev, boolean hasNext, int melodyCorrection, boolean open,boolean pac,boolean trill){
 		int note = blo.melodyNote;
 		int dur = blo.duration;
 		String melLily = blo.topLily;
@@ -75,7 +75,6 @@ public class Style{
 			ret.get(0).lilypond += "^\""+melLily+"\"";
 			return ret;
 		}
-
 
 		if(numbNotes == 2){
 			int firDir = 0;
@@ -96,14 +95,14 @@ public class Style{
 				secDir = 4 - firDir;
 			}
 			if(relate ==-1 && hasPrev){
-				ret.add(new Note(keyType,key+melodyCorrection+noteFromNote(blo,prevNote,offset,note),firDir,""));
+				ret.add(new Note(keyType,key+melodyCorrection+noteFromNote(blo,prevNote,offset,note,pac),firDir,""));
 				ret.add(new Note(keyType,key+melodyCorrection+note,secDir,""));
 
 			}else if (relate == 1 && hasNext){
 				ret.add(new Note(keyType,key+melodyCorrection+note,firDir,""));
-				ret.add(new Note(keyType,key+melodyCorrection+noteFromNote(blo,nextNote,offset,note),secDir,""));
+				ret.add(new Note(keyType,key+melodyCorrection+noteFromNote(blo,nextNote,offset,note,pac),secDir,""));
 			}else{
-				ret.add(new Note(keyType,key+melodyCorrection+noteFromNote(blo,note,offset,note),firDir,""));
+				ret.add(new Note(keyType,key+melodyCorrection+noteFromNote(blo,note,offset,note,pac),firDir,""));
 				ret.add(new Note(keyType,key+melodyCorrection+note,secDir,""));
 			}
 
@@ -161,9 +160,9 @@ public class Style{
 				ret.add(new Note(keyType,key+melodyCorrection+notesScaleRelate(note,-1),secDir,""));
 			}else{
 				if(offset ==0){
-					ret.add(new Note(keyType,key+melodyCorrection+noteFromNote(blo,note,-1,note),secDir,""));
+					ret.add(new Note(keyType,key+melodyCorrection+noteFromNote(blo,note,-1,note,pac),secDir,""));
 				}else{
-					ret.add(new Note(keyType,key+melodyCorrection+noteFromNote(blo,note,offset,note),secDir,""));	
+					ret.add(new Note(keyType,key+melodyCorrection+noteFromNote(blo,note,offset,note,pac),secDir,""));	
 				}
 			}
 			if(thiDir != 0 ){
@@ -248,7 +247,10 @@ public class Style{
 		return result;
 	}
 
-	private int noteFromNote(Block b, int orig, int relation,int avoid){
+	private int noteFromNote(Block b, int orig, int relation,int avoid,boolean pac){
+		if(pac){
+			return orig-1;
+		}
 		if(relation == 0){
 			return orig;
 		}
@@ -276,7 +278,7 @@ public class Style{
 				}
 				int result = realNotes.get(index) + octaveCheck;
 				if(result == avoid){
-					return noteFromNote(b,orig,-relation,avoid);
+					return noteFromNote(b,orig,-relation,avoid,pac);
 				}
 				return result;
 			}

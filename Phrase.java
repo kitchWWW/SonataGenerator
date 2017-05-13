@@ -33,14 +33,14 @@ public class Phrase {
 			ArrayList<Note> tempRH = new ArrayList<>();
 			if(j == 0){
 				if(work.blocks.size()==1){
-					tempRH = s.melody(key, b, 0, 0, false,false,work.melodyCorrection,false,work.trill);
+					tempRH = s.melody(key, b, 0, 0, false,false,work.melodyCorrection,false,work.pac,work.trill);
 				}else{
-					tempRH = s.melody(key, b, 0, work.blocks.get(1).melodyNote, false,true,work.melodyCorrection,false,work.trill);
+					tempRH = s.melody(key, b, 0, work.blocks.get(1).melodyNote, false,true,work.melodyCorrection,false,false,work.trill);
 				}
 			}else if(j == work.blocks.size()-1){
-				tempRH = s.melody(key, b, work.blocks.get(j-1).melodyNote, 0, true,false,work.melodyCorrection,work.open,work.trill);
+				tempRH = s.melody(key, b, work.blocks.get(j-1).melodyNote, 0, true,false,work.melodyCorrection,work.open,work.pac,work.trill);
 			}else{
-				tempRH = s.melody(key, b, work.blocks.get(j-1).melodyNote, work.blocks.get(j+1).melodyNote, true, true,work.melodyCorrection,false,work.trill);
+				tempRH = s.melody(key, b, work.blocks.get(j-1).melodyNote, work.blocks.get(j+1).melodyNote, true, true,work.melodyCorrection,false,false,work.trill);
 			}
 			rh.addAll(tempRH);
 		}
