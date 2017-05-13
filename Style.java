@@ -94,11 +94,11 @@ public class Style{
 				firDir = firstDuration;
 				secDir = 4 - firDir;
 			}
-			if(relate ==-1 && hasPrev){
+			if(relate ==-1 && hasPrev &&!pac){
 				ret.add(new Note(keyType,key+melodyCorrection+noteFromNote(blo,prevNote,offset,note,pac),firDir,""));
 				ret.add(new Note(keyType,key+melodyCorrection+note,secDir,""));
 
-			}else if (relate == 1 && hasNext){
+			}else if (relate == 1 && hasNext&&!pac){
 				ret.add(new Note(keyType,key+melodyCorrection+note,firDir,""));
 				ret.add(new Note(keyType,key+melodyCorrection+noteFromNote(blo,nextNote,offset,note,pac),secDir,""));
 			}else{
@@ -156,7 +156,7 @@ public class Style{
 
 
 			ret.add(new Note(keyType,key+melodyCorrection+note,firDir,""));
-			if(dur==16 || (dur == 8 && !hasNext)){
+			if(dur==16 || (dur == 8 && !hasNext)||pac){
 				ret.add(new Note(keyType,key+melodyCorrection+notesScaleRelate(note,-1),secDir,""));
 			}else{
 				if(offset ==0){
