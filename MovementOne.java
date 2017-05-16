@@ -224,7 +224,7 @@ public class MovementOne {
 		ArrayList<Phrase> developmentOptions = new ArrayList<>();
 
 		phr = new Phrase(2);
-		phr.blocks.add(new Block(analyze,0,7,5,4,8,"Development","I"));	//I
+		phr.blocks.add(new Block(analyze,0,7,5,4,8,"\n%lab\n","I"));	//I
 		phr.blocks.add(new Block(analyze,-1,7,2,2,8,"","V6"));	//V6
 		phr.blocks.add(new Block(analyze,-3,4,0,0,8,"","vi"));	//vi
 		phr.blocks.add(new Block(analyze,-5,4,-1,4,8,"","iii6"));	//iii
@@ -240,6 +240,54 @@ public class MovementOne {
 		phr.blocks.add(new Block(analyze,-8,0,-5,4,8,"","I6"));	//I6
 		phr.blocks.add(new Block(analyze,-7,2,-3,2,8,"","ii6"));	//ii6
 		phr.blocks.add(new Block(analyze,-5,2,-1,2,8,"","V"));	//V
+		//do standing after this
+
+		phr.open = false;
+		developmentOptions.add(phr);
+
+
+		phr = new Phrase(2);
+		phr.blocks.add(new Block(analyze,0,7,5,0,8,"\n%lab\n","I"));	//I
+		phr.blocks.add(new Block(analyze,-1,7,2,2,8,"","V6"));	//V6
+		phr.blocks.add(new Block(analyze,-3,4,0,4,8,"","vi"));	//vi
+		phr.blocks.add(new Block(analyze,-5,4,-1,4,8,"","iii6"));	//iii
+		phr.blocks.add(new Block(analyze,-7,0,-3,5,8,"","IV"));	//IV
+		phr.blocks.add(new Block(analyze,-7,2,-1,7,8,"","V42"));	//V42
+		phr.blocks.add(new Block(analyze,-8,0,-5,4,16,"","I6"));	//I6
+
+		phr.blocks.add(new Block(analyze,0,7,5,0,8,"","I"));	//I
+		phr.blocks.add(new Block(analyze,-1,7,2,2,8,"","V6"));	//V6
+		phr.blocks.add(new Block(analyze,-3,4,0,4,8,"","vi"));	//vi
+		phr.blocks.add(new Block(analyze,-5,4,-1,4,8,"","iii6"));	//iii
+		phr.blocks.add(new Block(analyze,-7,0,-3,5,4,"","IV"));	//IV
+		phr.blocks.add(new Block(analyze,-8,0,-5,4,4,"","I6"));	//I6
+		phr.blocks.add(new Block(analyze,-7,2,-3,2,4,"","ii6"));	//ii6
+		phr.blocks.add(new Block(analyze,-5,2,-1,2,4,"","V"));	//V
+		//do standing after this
+
+		phr.open = false;
+		developmentOptions.add(phr);
+
+
+		phr = new Phrase(1);
+		phr.blocks.add(new Block(analyze,0,7,5,4,8,"\n%lab\n","I"));	//I
+		phr.blocks.add(new Block(analyze,-7,0,-3,5,8,"","IV"));	//IV
+		phr.blocks.add(new Block(analyze,-1,5,2,2,8,"","vii°"));	//IV
+		phr.blocks.add(new Block(analyze,-8,-1,-5,4,8,"","iii"));	//IV
+		phr.blocks.add(new Block(analyze,-3,4,0,9,8,"","vi"));	//IV
+		phr.blocks.add(new Block(analyze,-10,-3,-7,5,8,"","ii"));	//IV
+		phr.blocks.add(new Block(analyze,-5,4,0,4,8,"","V64"));	//IV
+		phr.blocks.add(new Block(analyze,-5,2,-1,2,8,"","V53"));	//IV
+		
+		phr.blocks.add(new Block(analyze,0,7,5,4,8,"","I"));	//I
+		phr.blocks.add(new Block(analyze,-7,0,-3,5,8,"","IV"));	//IV
+		phr.blocks.add(new Block(analyze,-1,5,2,2,4,"","vii°"));	//IV
+		phr.blocks.add(new Block(analyze,-8,-1,-5,4,4,"","iii"));	//IV
+		phr.blocks.add(new Block(analyze,-3,4,0,9,4,"","vi"));	//IV
+		phr.blocks.add(new Block(analyze,-10,-3,-7,5,4,"","ii"));	//IV
+		phr.blocks.add(new Block(analyze,-5,4,0,4,8,"","V64"));	//IV
+		phr.blocks.add(new Block(analyze,-5,2,-1,2,8,"","V53"));	//IV
+
 		//do standing after this
 
 		phr.open = false;
@@ -323,9 +371,14 @@ public class MovementOne {
 
 //Now on to the development
 
-		int developmentIndex = 0;
+		int developmentIndex = ThreadLocalRandom.current().nextInt(0,developmentOptions.size());
 		Style developmentStyle = new Style(styleOrder.get(1),keyType);
 		sonata.add(new Idea(developmentOptions.get(developmentIndex),developmentStyle,key-5));
+
+		developmentIndex = ThreadLocalRandom.current().nextInt(0,developmentOptions.size());
+		developmentStyle = new Style(styleOrder.get(4),keyType);
+		sonata.add(new Idea(developmentOptions.get(developmentIndex),developmentStyle,key-5));
+
 		sonata.add(new Idea(standing,developmentStyle,key-5));//standing
 
 //And now we just add the opening theme verbatium back in, plus transition without modulation

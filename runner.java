@@ -51,7 +51,7 @@ public class runner {
 		String lhFinal = Note.toString(pianoPart.get(0));
 
 
-		String[] labels = {"P.T.\" ^\"Exposition","","S.T.","","Standing on V","","P.T.\" ^\"Recapitulation","","S.T.","","","PAC"};
+		String[] labels = {"P.T.\" ^\"Exposition","","S.T.","","Development","","Standing on V","","P.T.\" ^\"Recapitulation","","S.T.","","","PAC"};
 		int index = 0;
 		while(rhFinal.indexOf("\n%lab\n")!= -1){
 			int ind = rhFinal.indexOf("\n%lab\n");
