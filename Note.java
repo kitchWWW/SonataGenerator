@@ -7,7 +7,7 @@ public class Note {
 	//0 = sharps and flats
 	//1 = sharps
 	//2 = flats
-	//3 = double fucking sharps
+	//3 = double sharps
 	static String[] titleNames = {"C","Db","D","Eb","E","F","F#","G","Ab","A","Bb","B"};
 	static String[][] noteNames = {{"c","cis","d","ees","e","f","fis","g","aes","a","bes","b"},
 	{"c","cis","d","dis","e","f","fis","g","gis","a","ais","b"},
